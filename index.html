@@ -1,0 +1,1715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>指闻 · 运营管理后台</title>
+
+<style>
+/* ===== CSS Variables ===== */
+:root{
+  --primary:#4F6EF7;--primary-light:#EEF1FE;--primary-dark:#3B54D4;--primary-50:#F5F7FE;
+  --sidebar-bg:#0F172A;--sidebar-hover:#1E293B;--sidebar-active:rgba(79,110,247,0.12);
+  --bg:#F1F5F9;--card:#FFFFFF;--border:#E2E8F0;--border-light:#F1F5F9;
+  --text:#0F172A;--text2:#64748B;--text3:#94A3B8;--text4:#CBD5E1;
+  --success:#10B981;--success-light:#ECFDF5;--warning:#F59E0B;--warning-light:#FFFBEB;
+  --danger:#EF4444;--danger-light:#FEF2F2;--info:#3B82F6;--info-light:#EFF6FF;
+  --purple:#8B5CF6;--purple-light:#F5F3FF;
+  --radius:8px;--radius-sm:6px;--radius-lg:12px;--radius-xl:16px;
+  --shadow-xs:0 1px 2px rgba(0,0,0,0.04);
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lg:0 12px 32px rgba(0,0,0,0.12);
+  --transition:0.2s cubic-bezier(0.4,0,0.2,1);
+  --font:-apple-system,BlinkMacSystemFont,PingFang SC,Microsoft YaHei,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5;overflow-y:auto;overflow-x:hidden;height:100vh;-webkit-font-smoothing:antialiased}
+a{color:var(--primary);text-decoration:none}
+button{cursor:pointer;font-family:var(--font);border:none;outline:none;transition:var(--transition);-webkit-tap-highlight-color:transparent}
+input,select,textarea{font-family:var(--font);outline:none;transition:var(--transition);-webkit-tap-highlight-color:transparent}
+table{border-collapse:collapse;width:100%}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#94A3B8}
+
+/* ===== SVG Icons ===== */
+svg.icon{width:1em;height:1em;display:inline-block;vertical-align:-0.125em;flex-shrink:0}
+svg.icon-lg{width:1.25em;height:1.25em}
+svg.icon-xl{width:1.5em;height:1.5em}
+svg.icon-2xl{width:2em;height:2em}
+
+/* ===== Login ===== */
+.login-page{display:flex;align-items:center;justify-content:center;height:100vh;background:linear-gradient(135deg,#0F172A 0%,#1E293B 50%,#172554 100%);position:relative}
+.login-page::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 25% 50%,rgba(79,110,247,0.15) 0%,transparent 55%),radial-gradient(ellipse at 75% 20%,rgba(16,185,129,0.10) 0%,transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(139,92,246,0.06) 0%,transparent 45%)}
+.login-bg-dots{position:fixed;inset:0;background-image:radial-gradient(rgba(148,163,184,0.08) 1px,transparent 1px);background-size:24px 24px;pointer-events:none}
+.login-card{position:relative;z-index:1;width:420px;background:var(--card);border-radius:var(--radius-xl);padding:44px 40px;box-shadow:0 24px 64px rgba(0,0,0,0.25),0 0 0 1px rgba(255,255,255,0.05)}
+.login-logo{text-align:center;margin-bottom:36px}
+.login-logo .logo-ring{width:52px;height:52px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--primary),#818CF8);border-radius:50%;color:#fff;box-shadow:0 8px 24px rgba(79,110,247,0.3)}
+.login-logo h1{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.login-logo p{font-size:13px;color:var(--text2);margin-top:6px}
+.login-card .form-group{margin-bottom:20px}
+.login-card label{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:7px;letter-spacing:0.2px}
+.login-card input{width:100%;height:44px;padding:0 14px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;color:var(--text);background:#F8FAFC;transition:all 0.2s}
+.login-card input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,110,247,0.1);background:#fff}
+.login-card input::placeholder{color:var(--text4)}
+.login-card .btn-login{width:100%;height:46px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-size:15px;font-weight:600;border-radius:var(--radius);margin-top:10px;letter-spacing:0.3px;box-shadow:0 4px 12px rgba(79,110,247,0.25);transition:all 0.2s}
+.login-card .btn-login:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(79,110,247,0.35)}
+.login-card .btn-login:active:not(:disabled){transform:translateY(0)}
+.login-card .btn-login:disabled{opacity:0.5;cursor:not-allowed}
+.login-error{color:var(--danger);font-size:13px;text-align:center;margin-top:14px;display:none;background:var(--danger-light);padding:8px 12px;border-radius:var(--radius-sm)}
+
+/* ===== Main Layout ===== */
+.app-layout{display:none;height:100vh;min-width:0;grid-template-columns:clamp(200px,14vw,280px) 1fr;grid-template-rows:56px 1fr;transition:grid-template-columns 0.25s cubic-bezier(0.4,0,0.2,1)}
+.app-layout.collapsed{grid-template-columns:64px 1fr}
+
+/* Sidebar */
+.sidebar{background:var(--sidebar-bg);grid-row:1/3;display:flex;flex-direction:column;overflow:hidden;transition:width var(--transition);position:relative;z-index:20}
+.sidebar::after{content:'';position:absolute;right:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,0.06)}
+.sidebar-logo{display:flex;align-items:center;gap:10px;padding:0 18px;height:56px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0}
+.sidebar-logo .logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#818CF8);display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
+.sidebar-logo .text{font-size:16px;font-weight:700;color:#fff;white-space:nowrap;letter-spacing:-0.2px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:8px 10px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--radius);color:rgba(255,255,255,0.55);font-size:13.5px;cursor:pointer;transition:all 0.15s;margin-bottom:1px;white-space:nowrap;position:relative}
+.nav-item:hover{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.8)}
+.nav-item.active{background:var(--sidebar-active);color:#fff;font-weight:600}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--primary);border-radius:0 2px 2px 0}
+.nav-item .nav-icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0.75}
+.nav-item.active .nav-icon{opacity:1}
+.nav-item .badge{background:var(--danger);color:#fff;font-size:10px;font-weight:600;padding:1px 6px;border-radius:10px;margin-left:auto;min-width:20px;text-align:center}
+.collapsed .sidebar-logo .text,.collapsed .nav-item .text,.collapsed .nav-item .badge{display:none}
+.collapsed .sidebar{width:64px}
+.collapsed .nav-item{justify-content:center;padding:9px}
+
+/* Topbar */
+.topbar{background:var(--card);display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--border);z-index:10;position:relative}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-left .collapse-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--text2);border-radius:var(--radius);transition:all 0.15s}
+.topbar-left .collapse-btn:hover{background:var(--bg);color:var(--text)}
+.topbar-left .breadcrumb{font-size:13px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.topbar-left .breadcrumb span.current{color:var(--text);font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:12px}
+.topbar-right .search-box{position:relative;display:flex;align-items:center}
+.topbar-right .search-box input{width:200px;height:34px;padding:0 12px 0 34px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--bg);color:var(--text);transition:all 0.2s}
+.topbar-right .search-box input:focus{width:240px;border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(79,110,247,0.06)}
+.topbar-right .search-box .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.topbar-right .icon-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--text2);border-radius:var(--radius);position:relative;font-size:17px}
+.topbar-right .icon-btn:hover{background:#E2E8F0;color:var(--text)}
+.topbar-right .icon-btn .dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--danger);border-radius:50%;border:2px solid #fff}
+.topbar-right .avatar{width:34px;height:34px;border-radius:var(--radius);background:linear-gradient(135deg,var(--primary),#818CF8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.topbar-right .avatar:hover{transform:scale(1.05);box-shadow:0 2px 8px rgba(79,110,247,0.25)}
+.topbar-right .user-name{font-size:13px;font-weight:600;color:var(--text);margin-left:2px}
+
+/* Content */
+.main-content{grid-row:2;overflow-y:visible;overflow-x:hidden;padding:20px clamp(16px,2vw,32px) 24px;background:var(--bg)}
+.page{display:none}
+.page.active{display:block;animation:fadeInUp 0.25s ease;max-width:1400px;margin:0 auto;width:100%}
+@keyframes fadeInUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== Components ===== */
+/* Stat cards */
+.stat-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;margin-bottom:20px}
+.stat-card{background:var(--card);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow-xs);display:flex;justify-content:space-between;align-items:flex-start;border:1px solid var(--border-light);transition:all 0.2s;cursor:default}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.stat-card .info .label{font-size:12.5px;color:var(--text2);margin-bottom:6px;font-weight:500;letter-spacing:0.2px}
+.stat-card .info .value{font-size:30px;font-weight:700;color:var(--text);letter-spacing:-0.5px;line-height:1}
+.stat-card .info .change{font-size:12px;margin-top:10px;display:flex;align-items:center;gap:4px}
+.stat-card .info .change.up{color:var(--success)}
+.stat-card .info .change.down{color:var(--danger)}
+.stat-card .icon-box{width:46px;height:46px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-card .icon-box.blue{background:var(--info-light);color:var(--info)}
+.stat-card .icon-box.green{background:var(--success-light);color:var(--success)}
+.stat-card .icon-box.orange{background:var(--warning-light);color:var(--warning)}
+.stat-card .icon-box.purple{background:var(--purple-light);color:var(--purple)}
+
+/* Cards */
+.card{background:var(--card);border-radius:var(--radius-lg);box-shadow:var(--shadow-xs);border:1px solid var(--border-light);margin-bottom:16px}
+.card-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border)}
+.card-header h3{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-0.2px}
+.card-body{padding:20px}
+.card-body.no-padding{padding:0}
+
+/* Data table */
+.data-table{width:100%;font-size:13px}
+.data-table thead th{background:#F8FAFC;padding:10px 14px;text-align:left;font-weight:600;color:var(--text2);font-size:12px;border-bottom:2px solid var(--border);white-space:nowrap;letter-spacing:0.2px}
+.data-table tbody td{padding:12px 14px;border-bottom:1px solid var(--border-light);color:var(--text);white-space:nowrap}
+.data-table tbody tr{transition:all 0.15s}
+.data-table tbody tr:hover{background:var(--primary-50)}
+.data-table tbody tr.clickable{cursor:pointer}
+
+/* Badge */
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11.5px;font-weight:600;letter-spacing:0.2px}
+.badge.success{background:var(--success-light);color:#065F46}
+.badge.warning{background:var(--warning-light);color:#92400E}
+.badge.danger{background:var(--danger-light);color:#991B1B}
+.badge.info{background:var(--info-light);color:#1E40AF}
+.badge.default{background:#F1F5F9;color:var(--text2)}
+.badge.purple{background:var(--purple-light);color:#5B21B6}
+.badge.badge-type{background:#F1F5F9;color:var(--text2);font-weight:500}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:8px 16px;font-size:13px;font-weight:600;border-radius:var(--radius);letter-spacing:0.2px;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 2px 6px rgba(79,110,247,0.2)}
+.btn-primary:hover{background:var(--primary-dark);box-shadow:0 4px 12px rgba(79,110,247,0.3)}
+.btn-outline{background:var(--card);color:var(--text2);border:1.5px solid var(--border)}
+.btn-outline:hover{background:var(--bg);color:var(--text);border-color:var(--text3)}
+.btn-outline.active{background:var(--primary-50);color:var(--primary);border-color:var(--primary)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-xs{padding:3px 8px;font-size:11px;border-radius:var(--radius-sm)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{opacity:0.9}
+.btn-ghost{background:transparent;color:var(--text2)}
+.btn-ghost:hover{background:var(--bg);color:var(--text)}
+.btn-success{background:var(--success);color:#fff}
+.btn-success:hover{opacity:0.9}
+
+/* Funnel */
+.funnel{padding:16px 20px 20px}
+.funnel-step{display:flex;align-items:center;gap:16px;margin-bottom:14px}
+.funnel-step:last-child{margin-bottom:0}
+.funnel-step .label{width:80px;font-size:13px;font-weight:600;color:var(--text2);text-align:right;flex-shrink:0}
+.funnel-step .bar-wrap{flex:1;height:32px;background:#F1F5F9;border-radius:4px;overflow:hidden;position:relative}
+.funnel-step .bar{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:12px;font-size:12px;font-weight:600;color:#fff;transition:width 0.8s cubic-bezier(0.4,0,0.2,1)}
+.funnel-step .bar.blue{background:linear-gradient(90deg,#4F6EF7,#6B8AFF)}
+.funnel-step .bar.green{background:linear-gradient(90deg,#10B981,#34D399)}
+.funnel-step .bar.orange{background:linear-gradient(90deg,#F59E0B,#FBBF24)}
+.funnel-step .bar.purple{background:linear-gradient(90deg,#8B5CF6,#A78BFA)}
+.funnel-step .bar.red{background:linear-gradient(90deg,#EF4444,#F87171)}
+.funnel-step .rate{width:56px;font-size:13px;font-weight:700;color:var(--text);text-align:left;flex-shrink:0}
+
+/* Toggle */
+.toggle{width:44px;height:24px;background:#CBD5E1;border-radius:12px;cursor:pointer;position:relative;transition:all 0.25s;flex-shrink:0}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:all 0.25s;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.toggle.on{background:var(--primary)}
+.toggle.on::after{left:22px}
+
+/* Tabs */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);padding:0 20px;background:var(--card)}
+.tab-item{padding:12px 20px;font-size:13.5px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s;white-space:nowrap}
+.tab-item:hover{color:var(--text)}
+.tab-item.active{color:var(--primary);border-color:var(--primary);font-weight:600}
+
+/* Flag card */
+.flag-card{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border-light);transition:all 0.15s}
+.flag-card:last-child{border-bottom:none}
+.flag-card:hover{background:#FAFBFC}
+.flag-card .info .name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.flag-card .info .desc{font-size:12.5px;color:var(--text2);margin-bottom:4px}
+.flag-card .info .meta{font-size:11px;color:var(--text3)}
+
+/* Timeline */
+.timeline{position:relative;padding-left:28px}
+.timeline::before{content:'';position:absolute;left:8px;top:4px;bottom:4px;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:16px}
+.timeline-item:last-child{margin-bottom:0}
+.timeline-item::before{content:'';position:absolute;left:-20px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--primary);border:2px solid var(--card);box-shadow:0 0 0 2px var(--primary)}
+.timeline-item .time{font-size:11px;color:var(--text3);margin-bottom:2px}
+.timeline-item .content{font-size:13px;color:var(--text)}
+
+/* Permission grid */
+.perm-grid{overflow-x:auto}
+.perm-grid table{min-width:700px;font-size:13px}
+.perm-grid thead th{background:#F8FAFC;padding:10px 12px;font-size:12px;font-weight:600;color:var(--text2);border:1px solid var(--border);text-align:center;white-space:nowrap}
+.perm-grid thead th:first-child{text-align:left;position:sticky;left:0;z-index:1;background:#F8FAFC}
+.perm-grid tbody td{border:1px solid var(--border-light);text-align:center;padding:10px 12px}
+.perm-grid tbody td:first-child{font-weight:600;color:var(--text);text-align:left;background:#FAFBFC}
+.perm-grid .check{color:var(--success);font-weight:700}
+.perm-grid .cross{color:var(--text4)}
+
+/* State machine */
+.state-machine{display:flex;align-items:center;justify-content:center;gap:0;padding:20px;overflow-x:auto}
+.state-node{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+.state-node .dot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;transition:all 0.2s}
+.state-node .dot.active{background:var(--primary);box-shadow:0 4px 12px rgba(79,110,247,0.3)}
+.state-node .dot.inactive{background:#CBD5E1}
+.state-node .label{font-size:11px;color:var(--text2);text-align:center;max-width:64px}
+.state-node .count{font-size:10px;color:var(--text3)}
+.state-arrow{width:32px;height:2px;background:var(--border);flex-shrink:0;margin:0 2px;position:relative}
+.state-arrow::after{content:'';position:absolute;right:-3px;top:-3px;border-left:6px solid var(--border);border-top:4px solid transparent;border-bottom:4px solid transparent}
+
+/* Search bar */
+.search-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.search-bar input,.search-bar select{height:36px;padding:0 10px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;color:var(--text);background:var(--card)}
+.search-bar input{width:200px}
+.search-bar input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(79,110,247,0.06)}
+.search-bar select{background:var(--card);cursor:pointer}
+
+/* Page header */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-header h2{font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.page-header .actions{display:flex;gap:8px}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.5);z-index:100;display:none;align-items:center;justify-content:center;backdrop-filter:blur(2px)}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:var(--radius-xl);box-shadow:0 24px 64px rgba(0,0,0,0.2);width:520px;max-height:80vh;display:flex;flex-direction:column;animation:modalIn 0.2s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(0.96) translateY(8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border)}
+.modal-header h3{font-size:17px;font-weight:700;letter-spacing:-0.2px}
+.modal-close{width:32px;height:32px;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--text3);border-radius:var(--radius);font-size:18px}
+.modal-close:hover{background:var(--bg);color:var(--text)}
+.modal-body{padding:24px;overflow-y:auto;flex:1}
+.modal-footer{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--border)}
+.modal.wide{width:680px}
+
+/* Drawer */
+.drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.4);z-index:100;display:none;transition:opacity 0.25s}
+.drawer-overlay.show{display:block}
+.drawer{position:fixed;top:0;right:-480px;width:480px;height:100vh;background:var(--card);z-index:101;box-shadow:-8px 0 24px rgba(0,0,0,0.1);transition:right 0.3s cubic-bezier(0.4,0,0.2,1);display:flex;flex-direction:column}
+.drawer.open{right:0}
+.drawer-header{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--border);flex-shrink:0}
+.drawer-body{flex:1;overflow-y:auto;padding:20px 24px}
+.drawer-tabs{display:flex;border-bottom:2px solid var(--border);margin-bottom:16px}
+.drawer-tab{padding:8px 16px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all 0.15s}
+.drawer-tab.active{color:var(--primary);border-color:var(--primary);font-weight:600}
+
+/* Toast */
+.toast-container{position:fixed;top:24px;right:24px;z-index:200;display:flex;flex-direction:column;gap:8px}
+.toast{display:flex;align-items:center;gap:10px;padding:12px 20px;background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow-lg);font-size:13.5px;font-weight:500;animation:toastIn 0.3s ease;border-left:4px solid var(--primary)}
+.toast.success{border-left-color:var(--success)}
+.toast.error{border-left-color:var(--danger)}
+.toast.warning{border-left-color:var(--warning)}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* Chart area */
+.chart-area{position:relative;padding:12px 0}
+.chart-area svg{width:100%}
+
+/* Section grid */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+
+/* Metric mini cards */
+.metric-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:16px 20px}
+.metric-card{padding:16px;background:#F8FAFC;border-radius:var(--radius);transition:all 0.15s;cursor:default}
+.metric-card:hover{background:var(--primary-50)}
+.metric-card .mc-label{font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500}
+.metric-card .mc-value{font-size:22px;font-weight:700;color:var(--text)}
+.metric-card .mc-unit{font-size:12px;color:var(--text3);font-weight:400;margin-left:2px}
+.metric-card .mc-status{font-size:11px;margin-top:6px}
+.metric-card .mc-status.ok{color:var(--success)}
+
+/* Pie chart */
+.pie-chart{width:140px;height:140px;border-radius:50%;margin:0 auto}
+.pie-legend{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:16px}
+.pie-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2)}
+.pie-legend-item .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* Ticket list */
+.ticket-item{padding:14px 20px;border-bottom:1px solid var(--border-light);cursor:pointer;transition:all 0.15s;border-left:3px solid transparent}
+.ticket-item:hover{background:#FAFBFC}
+.ticket-item.selected{background:var(--primary-50);border-left-color:var(--primary)}
+.ticket-item .t-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.ticket-item .t-meta{font-size:12px;color:var(--text2);display:flex;gap:12px}
+
+/* Empty state */
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3)}
+.empty-state svg{opacity:0.3;margin-bottom:12px}
+
+/* Settings group */
+.settings-group{margin-bottom:20px}
+.settings-group .sg-title{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;padding:0 4px}
+.settings-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border-light)}
+.settings-item .si-label{font-size:14px;font-weight:500}
+.settings-item .si-desc{font-size:12px;color:var(--text2);margin-top:2px}
+.settings-item select{height:34px;padding:0 10px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;background:var(--card);cursor:pointer;min-width:120px}
+
+/* Compliance cards */
+.compliance-card{padding:16px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;transition:all 0.15s}
+.compliance-card:hover{border-color:var(--primary);box-shadow:0 0 0 1px var(--primary)}
+.compliance-card .cc-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.compliance-card .cc-title{font-size:14px;font-weight:600}
+
+/* Distribution grid */
+.dist-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:16px}
+
+/* Table wrapper for horizontal scroll */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ===== Responsive Breakpoints ===== */
+/* Wide: >2000px (50% zoom / 4K displays) */
+@media (min-width:2000px){
+  .dist-grid{grid-template-columns:repeat(4,1fr)}
+  .stat-cards{grid-template-columns:repeat(4,1fr)}
+}
+
+/* Medium-wide: 1600-2000px (75% zoom / large monitors) */
+@media (min-width:1600px) and (max-width:1999px){
+  .dist-grid{grid-template-columns:repeat(4,1fr)}
+  .stat-cards{grid-template-columns:repeat(4,1fr)}
+}
+
+/* Normal desktop: 1200-1600px (100% zoom) */
+@media (min-width:1200px) and (max-width:1599px){
+  .dist-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-cards{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(2,1fr)}
+}
+
+/* Narrow: <1200px (150%+ zoom / tablets) */
+@media (max-width:1199px){
+  .app-layout{grid-template-columns:200px 1fr}
+  .app-layout.collapsed{grid-template-columns:56px 1fr}
+  .dist-grid{grid-template-columns:repeat(2,1fr)}
+  .stat-cards{grid-template-columns:1fr 1fr}
+  .grid-2{grid-template-columns:1fr}
+  .grid-3{grid-template-columns:1fr 1fr}
+  .metric-cards{grid-template-columns:repeat(2,1fr)}
+  .main-content{padding:16px 16px 20px}
+  .search-bar{flex-direction:column;align-items:stretch}
+  .search-bar input{width:100%}
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- SVG 图标精灵 -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Logo Ring -->
+  <symbol id="icon-ring" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.2"/>
+    <circle cx="12" cy="9" r="3.5" fill="currentColor"/>
+    <path d="M12 5.5V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Dashboard: 4-grid -->
+  <symbol id="icon-dashboard" viewBox="0 0 24 24" fill="none">
+    <rect x="2" y="2" width="9" height="9" rx="1.5" fill="currentColor" opacity="0.85"/>
+    <rect x="13" y="2" width="9" height="9" rx="1.5" fill="currentColor" opacity="0.45"/>
+    <rect x="2" y="13" width="9" height="9" rx="1.5" fill="currentColor" opacity="0.45"/>
+    <rect x="13" y="13" width="9" height="9" rx="1.5" fill="currentColor" opacity="0.85"/>
+  </symbol>
+
+  <!-- Users -->
+  <symbol id="icon-users" viewBox="0 0 24 24" fill="none">
+    <circle cx="9" cy="7" r="3" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M3 21v-2a5 5 0 015-5h2a5 5 0 015 5v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="17" cy="9" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M15 19v-1a4 4 0 014-4h1a3 3 0 013 3v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Device/Ring -->
+  <symbol id="icon-device" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="12" cy="11" r="3" fill="currentColor" opacity="0.3"/>
+    <rect x="7" y="3" width="10" height="4" rx="2" stroke="currentColor" stroke-width="1.8"/>
+  </symbol>
+
+  <!-- Health: Heart + pulse -->
+  <symbol id="icon-health" viewBox="0 0 24 24" fill="none">
+    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M8 11h2l1.5-3 2 6 1.5-3H16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Content/Document -->
+  <symbol id="icon-content" viewBox="0 0 24 24" fill="none">
+    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="14,2 14,8 20,8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="8" y1="13" x2="16" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="8" y1="17" x2="16" y2="17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Ticket -->
+  <symbol id="icon-ticket" viewBox="0 0 24 24" fill="none">
+    <path d="M21 7v2a2 2 0 000 4v2a2 2 0 010 4H3a2 2 0 010-4v-2a2 2 0 000-4V7a2 2 0 010-4h18a2 2 0 010 4z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="8" y1="8" x2="16" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="8" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Version/Package -->
+  <symbol id="icon-version" viewBox="0 0 24 24" fill="none">
+    <path d="M12 2L2 7l10 5 10-5-10-5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 17l10 5 10-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M2 12l10 5 10-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Push/Send -->
+  <symbol id="icon-push" viewBox="0 0 24 24" fill="none">
+    <path d="M22 2L11 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="22,2 15,22 11,13 2,9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Settings/Gear -->
+  <symbol id="icon-settings" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M12 1v3m0 16v3M1 12h3m16 0h3M4.93 4.93l2.12 2.12m9.9 9.9l2.12 2.12M4.93 19.07l2.12-2.12m9.9-9.9l2.12-2.12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- System/Shield -->
+  <symbol id="icon-system" viewBox="0 0 24 24" fill="none">
+    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="9,12 11,14 15,10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Search -->
+  <symbol id="icon-search" viewBox="0 0 24 24" fill="none">
+    <circle cx="10.5" cy="10.5" r="6" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M15 15l5.5 5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Bell -->
+  <symbol id="icon-bell" viewBox="0 0 24 24" fill="none">
+    <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M13.73 21a2 2 0 01-3.46 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Plus -->
+  <symbol id="icon-plus" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Edit -->
+  <symbol id="icon-edit" viewBox="0 0 24 24" fill="none">
+    <path d="M17 3a2.83 2.83 0 014 4L7.5 20.5 2 22l1.5-5.5L17 3z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Trash -->
+  <symbol id="icon-trash" viewBox="0 0 24 24" fill="none">
+    <polyline points="3,6 5,6 21,6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Close/X -->
+  <symbol id="icon-x" viewBox="0 0 24 24" fill="none">
+    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Chevron Down -->
+  <symbol id="icon-chevron-down" viewBox="0 0 24 24" fill="none">
+    <polyline points="6,9 12,15 18,9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Chevron Right -->
+  <symbol id="icon-chevron-right" viewBox="0 0 24 24" fill="none">
+    <polyline points="9,18 15,12 9,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Download -->
+  <symbol id="icon-download" viewBox="0 0 24 24" fill="none">
+    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Filter -->
+  <symbol id="icon-filter" viewBox="0 0 24 24" fill="none">
+    <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- User Single -->
+  <symbol id="icon-user" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Calendar -->
+  <symbol id="icon-calendar" viewBox="0 0 24 24" fill="none">
+    <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Alert Triangle -->
+  <symbol id="icon-alert" viewBox="0 0 24 24" fill="none">
+    <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <!-- Refresh -->
+  <symbol id="icon-refresh" viewBox="0 0 24 24" fill="none">
+    <polyline points="1,4 1,10 7,10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="23,20 23,14 17,14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Eye -->
+  <symbol id="icon-eye" viewBox="0 0 24 24" fill="none">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/>
+  </symbol>
+
+  <!-- Mobile Phone -->
+  <symbol id="icon-mobile" viewBox="0 0 24 24" fill="none">
+    <rect x="5" y="2" width="14" height="20" rx="2" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="12" y1="18" x2="12" y2="18.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Check Circle -->
+  <symbol id="icon-check-circle" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+    <polyline points="8,12 11,15 16,9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- More Horizontal -->
+  <symbol id="icon-more-h" viewBox="0 0 24 24" fill="currentColor">
+    <circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/>
+  </symbol>
+
+  <!-- Menu/Hamburger -->
+  <symbol id="icon-menu" viewBox="0 0 24 24" fill="none">
+    <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Activity / Pulse -->
+  <symbol id="icon-activity" viewBox="0 0 24 24" fill="none">
+    <polyline points="22,12 18,12 15,3 9,21 6,12 2,12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Arrow Up Right -->
+  <symbol id="icon-arrow-up-right" viewBox="0 0 24 24" fill="none">
+    <line x1="7" y1="17" x2="17" y2="7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <polyline points="7,7 17,7 17,17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Info Circle -->
+  <symbol id="icon-info" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="12" y1="16" x2="12" y2="11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="12" cy="8" r="1" fill="currentColor" stroke="none"/>
+  </symbol>
+
+  <!-- Lock -->
+  <symbol id="icon-lock" viewBox="0 0 24 24" fill="none">
+    <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Logout -->
+  <symbol id="icon-logout" viewBox="0 0 24 24" fill="none">
+    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="16,17 21,12 16,7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Cloud Upload -->
+  <symbol id="icon-cloud-upload" viewBox="0 0 24 24" fill="none">
+    <path d="M18 10h1a5 5 0 010 10H5A5 5 0 015 10h1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="12,2 12,14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <polyline points="9,5 12,2 15,5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Clock -->
+  <symbol id="icon-clock" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+    <polyline points="12,6 12,12 16,14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Map Pin -->
+  <symbol id="icon-map-pin" viewBox="0 0 24 24" fill="none">
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="12" cy="10" r="3" stroke="currentColor" stroke-width="1.8"/>
+  </symbol>
+
+  <!-- Pie Chart -->
+  <symbol id="icon-pie-chart" viewBox="0 0 24 24" fill="none">
+    <path d="M21.21 15.89A10 10 0 118 2.83" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M22 12A10 10 0 0012 2v10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Bar Chart -->
+  <symbol id="icon-bar-chart" viewBox="0 0 24 24" fill="none">
+    <line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Star -->
+  <symbol id="icon-star" viewBox="0 0 24 24" fill="none">
+    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Copy -->
+  <symbol id="icon-copy" viewBox="0 0 24 24" fill="none">
+    <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Move -->
+  <symbol id="icon-move" viewBox="0 0 24 24" fill="none">
+    <polyline points="5,9 2,12 5,15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="9,5 12,2 15,5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="15,19 12,22 9,19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="19,9 22,12 19,15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="2" y1="12" x2="22" y2="12" stroke="currentColor" stroke-width="1.5"/>
+    <line x1="12" y1="2" x2="12" y2="22" stroke="currentColor" stroke-width="1.5"/>
+  </symbol>
+
+  <!-- Dollar -->
+  <symbol id="icon-dollar" viewBox="0 0 24 24" fill="none">
+    <line x1="12" y1="1" x2="12" y2="23" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Sun -->
+  <symbol id="icon-sun" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="12" y1="1" x2="12" y2="3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="12" y1="21" x2="12" y2="23" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="1" y1="12" x2="3" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="21" y1="12" x2="23" y2="12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+
+  <!-- Moon -->
+  <symbol id="icon-moon" viewBox="0 0 24 24" fill="none">
+    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Layers -->
+  <symbol id="icon-layers" viewBox="0 0 24 24" fill="none">
+    <polygon points="12,2 2,7 12,12 22,7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="2,17 12,22 22,17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="2,12 12,17 22,12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+
+  <!-- Square -->
+  <symbol id="icon-square" viewBox="0 0 24 24" fill="none">
+    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/>
+    <polyline points="8,12 11,15 16,9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-user-plus" viewBox="0 0 24 24" fill="none">
+    <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/>
+    <line x1="18" y1="8" x2="18" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="15" y1="11" x2="21" y2="11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-trending-up" viewBox="0 0 24 24" fill="none">
+    <polyline points="23,6 13.5,15.5 9,11 1,19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="17,6 23,6 23,12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-chart" viewBox="0 0 24 24" fill="none">
+    <line x1="18" y1="20" x2="18" y2="10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="12" y1="20" x2="12" y2="4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="2" y1="20" x2="22" y2="20" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-chevron-left" viewBox="0 0 24 24" fill="none">
+    <polyline points="15,18 9,12 15,6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-database" viewBox="0 0 24 24" fill="none">
+    <ellipse cx="12" cy="5" rx="9" ry="3" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M21,5v14c0,1.66-4.03,3-9,3s-9-1.34-9-3V5" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M3,12c0,1.66,4.03,3,9,3s9-1.34,9-3" stroke="currentColor" stroke-width="1.8"/>
+  </symbol>
+  <symbol id="icon-heart" viewBox="0 0 24 24" fill="none">
+    <path d="M20.84,4.61a5.5,5.5,0,0,0-7.78,0L12,5.67,10.94,4.61a5.5,5.5,0,0,0-7.78,7.78L12,21l8.84-8.61A5.5,5.5,0,0,0,20.84,4.61Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-link" viewBox="0 0 24 24" fill="none">
+    <path d="M10,13a5,5,0,0,0,7.07,0l2.12-2.12A5,5,0,0,0,12.12,3.81L10.71,5.22" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M14,11a5,5,0,0,0-7.07,0L4.81,13.12A5,5,0,0,0,11.88,20.19l1.41-1.41" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-thermometer" viewBox="0 0 24 24" fill="none">
+    <path d="M14,14.76V3.5a2.5,2.5,0,0,0-5,0V14.76a3,3,0,1,0,5,0Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="11.5" y1="18" x2="11.5" y2="21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="9" y1="8" x2="14" y2="8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-trend-up" viewBox="0 0 24 24" fill="none">
+    <polyline points="23,6 13.5,15.5 9,11 1,19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="17,6 23,6 23,12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-upload" viewBox="0 0 24 24" fill="none">
+    <path d="M21,15v4a2,2,0,0,1-2,2H5a2,2,0,0,1-2-2V15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="17,8 12,3 7,8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="12" y1="3" x2="12" y2="15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+  </symbol>
+  <symbol id="icon-zap" viewBox="0 0 24 24" fill="none">
+    <polygon points="13,2 3,14 12,14 11,22 21,10 12,10 13,2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="icon-target" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="12" cy="12" r="6" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.8"/>
+  </symbol>
+  <symbol id="icon-palette" viewBox="0 0 24 24" fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M12,2a10,10,0,0,0,0,20,2.5,2.5,0,0,0,2.5-2.5,2.5,2.5,0,0,0-2-2.45V17H8a6,6,0,0,1,0-12h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    <circle cx="9" cy="8" r="1.5" fill="currentColor"/>
+    <circle cx="13.5" cy="5.5" r="1.5" fill="currentColor"/>
+    <circle cx="16.5" cy="9" r="1.5" fill="currentColor"/>
+  </symbol>
+  <symbol id="icon-shopping" viewBox="0 0 24 24" fill="none">
+    <circle cx="9" cy="21" r="1" stroke="currentColor" stroke-width="1.8"/>
+    <circle cx="20" cy="21" r="1" stroke="currentColor" stroke-width="1.8"/>
+    <path d="M1,1H5L7.68,14.39a2,2,0,0,0,2,1.61H19.4a2,2,0,0,0,2-1.61L23,6H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+</svg>
+
+<div class="login-page" id="loginPage">
+  <div class="login-bg-dots"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-ring"><svg class="icon icon-xl" style="width:26px;height:26px"><use href="#icon-ring"/></svg></div>
+      <h1>指闻 · 运营管理后台</h1>
+      <p>ZHIWEN Admin Console</p>
+    </div>
+    <div class="form-group">
+      <label>帐号</label>
+      <input id="adminAccount" value="admin@zhiwen.com" oninput="checkLoginBtn()" onkeydown="if(event.key==='Enter')handleLogin()" placeholder="请输入管理员帐号" autocomplete="off">
+    </div>
+    <div class="form-group">
+      <label>密码</label>
+      <input type="password" id="adminPassword" value="123456" oninput="checkLoginBtn()" onkeydown="if(event.key==='Enter')handleLogin()" placeholder="请输入密码">
+    </div>
+    <button class="btn-login" id="loginBtn" disabled onclick="handleLogin()">登 录</button>
+    <div class="login-error" id="loginError">帐号或密码错误，请重试</div>
+  </div>
+</div>
+
+<!-- ===== 主界面 ===== -->
+<div class="app-layout" id="appLayout">
+  <!-- 侧边栏 -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark"><svg class="icon icon-lg" style="width:18px;height:18px"><use href="#icon-ring"/></svg></div>
+      <span class="text">指闻后台</span>
+    </div>
+    <div class="sidebar-nav">
+
+<div class="nav-item" data-page="dashboard" onclick="App.navigate('dashboard')"><span class="nav-icon"><svg class="icon icon-lg"><use href="#icon-dashboard"/></svg></span><span class="text">数据看板</span></div>
+<div class="nav-item" data-page="user" onclick="App.navigate('user')"><span class="nav-icon"><svg class="icon icon-lg"><use href="#icon-users"/></svg></span><span class="text">用户管理</span></div>
+<div class="nav-item" data-page="cms" onclick="App.navigate('cms')"><span class="nav-icon"><svg class="icon icon-lg"><use href="#icon-content"/></svg></span><span class="text">内容管理</span></div>
+<div class="nav-item" data-page="feedback" onclick="App.navigate('feedback')"><span class="nav-icon"><svg class="icon icon-lg"><use href="#icon-ticket"/></svg></span><span class="text">问题反馈</span><span class="badge">2</span></div>
+<div class="nav-item" data-page="version" onclick="App.navigate('version')"><span class="nav-icon"><svg class="icon icon-lg"><use href="#icon-version"/></svg></span><span class="text">OTA管理</span></div>
+<div class="nav-item" data-page="system" onclick="App.navigate('system')"><span class="nav-icon"><svg class="icon icon-lg"><use href="#icon-system"/></svg></span><span class="text">系统管理</span></div>
+    </div>
+    <div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,0.06)">
+      <div style="display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.4);font-size:12px;cursor:pointer;padding:6px 8px;border-radius:6px" onmouseenter="this.style.background='rgba(255,255,255,0.05)'" onmouseleave="this.style.background='transparent'" onclick="App.logout()">
+        <svg class="icon"><use href="#icon-logout"/></svg>
+        <span class="text" style="white-space:nowrap">退出登录</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 顶栏 -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="collapse-btn" onclick="App.toggleSidebar()" title="折叠侧边栏">
+        <svg class="icon icon-lg"><use href="#icon-menu"/></svg>
+      </button>
+      <div class="breadcrumb"><span id="breadcrumbCurrent" class="current">数据看板</span></div>
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        <span class="search-icon"><svg class="icon"><use href="#icon-search"/></svg></span>
+        <input type="text" placeholder="全局搜索..." onfocus="this.parentElement.querySelector('input').style.width='260px'" onblur="this.parentElement.querySelector('input').style.width='200px'">
+      </div>
+      <button class="icon-btn" title="通知消息">
+        <svg class="icon icon-lg"><use href="#icon-bell"/></svg>
+        <span class="dot"></span>
+      </button>
+      <div class="avatar">Z</div>
+      <span class="user-name">Admin</span>
+    </div>
+  </div>
+
+  <!-- 内容区 -->
+  <div class="main-content" id="mainContent">
+
+<div class="page active" id="page-dashboard">
+  <div class="page-header"><h2>数据看板</h2><div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text3)"><svg class="icon"><use href="#icon-refresh"/></svg> 最后更新: 2026-07-07 14:30</div></div>
+
+  <!-- 统计卡片 -->
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="info"><div class="label">总用户数</div><div class="value">1,284,930</div></div>
+      <div class="icon-box blue"><svg class="icon icon-xl"><use href="#icon-users"/></svg></div>
+    </div>
+    <div class="stat-card">
+      <div class="info"><div class="label">日活设备</div><div class="value">328,591</div></div>
+      <div class="icon-box green"><svg class="icon icon-xl"><use href="#icon-mobile"/></svg></div>
+    </div>
+    <div class="stat-card">
+      <div class="info"><div class="label">昨日设备激活数</div><div class="value">3,280</div></div>
+      <div class="icon-box blue"><svg class="icon icon-xl"><use href="#icon-user-plus"/></svg></div>
+    </div>
+    <div class="stat-card">
+      <div class="info"><div class="label">今日设备激活数</div><div class="value">1,856</div></div>
+      <div class="icon-box green"><svg class="icon icon-xl"><use href="#icon-trending-up"/></svg></div>
+    </div>
+  </div>
+
+  <!-- 用户分布 -->
+  <div class="dist-grid">
+
+    <!-- 男女比例 -->
+    <div class="card">
+      <div class="card-header"><h3 style="display:flex;align-items:center;gap:8px"><svg class="icon" style="color:var(--primary)"><use href="#icon-pie-chart"/></svg>男女比例</h3></div>
+      <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:2px;padding-bottom:12px">
+        <svg viewBox="0 0 120 120" style="width:120px;height:120px">
+          <circle cx="60" cy="58" r="46" fill="none" stroke="#E2E8F0" stroke-width="14"/>
+          <circle cx="60" cy="58" r="46" fill="none" stroke="var(--primary)" stroke-width="14"
+            stroke-dasharray="289.03" stroke-dashoffset="92.49"
+            transform="rotate(-90 60 58)" stroke-linecap="butt"/>
+          <circle cx="60" cy="58" r="46" fill="none" stroke="#93C5FD" stroke-width="14"
+            stroke-dasharray="289.03" stroke-dashoffset="196.54"
+            transform="rotate(154.8 60 58)" stroke-linecap="butt"/>
+          <text x="60" y="52" text-anchor="middle" font-family="var(--font)" font-size="16" font-weight="700" fill="var(--primary)">男 68%</text>
+          <text x="60" y="69" text-anchor="middle" font-family="var(--font)" font-size="13" fill="var(--text2)">女 32%</text>
+        </svg>
+        <div style="display:flex;gap:28px">
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2)">
+            <span style="width:9px;height:9px;border-radius:2px;background:var(--primary);flex-shrink:0"></span>男性 <b style="color:var(--text)">873,752</b>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2)">
+            <span style="width:9px;height:9px;border-radius:2px;background:#CBD5E1;flex-shrink:0"></span>女性 <b style="color:var(--text)">411,178</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 尺寸比例 -->
+    <div class="card">
+      <div class="card-header"><h3 style="display:flex;align-items:center;gap:8px"><svg class="icon" style="color:var(--warning)"><use href="#icon-bar-chart"/></svg>尺寸比例</h3></div>
+      <div class="card-body" style="padding:2px 0 8px">
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">9号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--primary);border-radius:3px"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">25%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">8号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:88%;height:100%;background:var(--primary);border-radius:3px;opacity:0.88"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">22%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">10号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:64%;height:100%;background:var(--primary);border-radius:3px;opacity:0.76"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">16%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">7号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:48%;height:100%;background:var(--primary);border-radius:3px;opacity:0.64"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">12%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">11号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:36%;height:100%;background:var(--primary);border-radius:3px;opacity:0.52"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">9%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">6号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:28%;height:100%;background:var(--primary);border-radius:3px;opacity:0.40"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">7%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">12号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:20%;height:100%;background:var(--primary);border-radius:3px;opacity:0.28"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">5%</span></div>
+          <div style="display:flex;align-items:center;gap:8px"><span style="width:28px;font-size:11px;color:var(--text2);text-align:right;flex-shrink:0">5号</span><div style="flex:1;height:14px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="width:16%;height:100%;background:var(--primary);border-radius:3px;opacity:0.16"></div></div><span style="font-size:12px;font-weight:600;color:var(--text);width:30px;text-align:right;flex-shrink:0">4%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 颜色比例 -->
+    <div class="card">
+      <div class="card-header"><h3 style="display:flex;align-items:center;gap:8px"><svg class="icon" style="color:var(--purple)"><use href="#icon-palette"/></svg>颜色比例</h3></div>
+      <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:2px;padding-bottom:12px">
+        <svg viewBox="0 0 120 120" style="width:120px;height:120px">
+          <circle cx="60" cy="58" r="46" fill="none" stroke="#E2E8F0" stroke-width="14"/>
+          <circle cx="60" cy="58" r="46" fill="none" stroke="#1E293B" stroke-width="14"
+            stroke-dasharray="289.03" stroke-dashoffset="130.06"
+            transform="rotate(-90 60 58)" stroke-linecap="butt"/>
+          <circle cx="60" cy="58" r="46" fill="none" stroke="#CBD5E1" stroke-width="14"
+            stroke-dasharray="289.03" stroke-dashoffset="158.96"
+            transform="rotate(108 60 58)" stroke-linecap="butt"/>
+          <text x="60" y="52" text-anchor="middle" font-family="var(--font)" font-size="16" font-weight="700" fill="#1E293B">曜石黑 55%</text>
+          <text x="60" y="69" text-anchor="middle" font-family="var(--font)" font-size="13" fill="var(--text2)">星光银 45%</text>
+        </svg>
+        <div style="display:flex;gap:28px">
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2)">
+            <span style="width:9px;height:9px;border-radius:2px;background:#1E293B;flex-shrink:0"></span>曜石黑 <b style="color:var(--text)">704,958</b>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2)">
+            <span style="width:9px;height:9px;border-radius:2px;background:#CBD5E1;flex-shrink:0"></span>星光银 <b style="color:var(--text)">580,112</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 渠道分布 -->
+    <div class="card">
+      <div class="card-header"><h3 style="display:flex;align-items:center;gap:8px"><svg class="icon" style="color:var(--success)"><use href="#icon-chart"/></svg>渠道分布</h3></div>
+      <div class="card-body" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding-top:2px;padding-bottom:12px">
+        <svg viewBox="0 0 120 120" style="width:120px;height:120px">
+          <circle cx="60" cy="58" r="46" fill="none" stroke="#E2E8F0" stroke-width="14"/>
+          <circle cx="60" cy="58" r="46" fill="none" stroke="var(--success)" stroke-width="14"
+            stroke-dasharray="289.03" stroke-dashoffset="75.15"
+            transform="rotate(-90 60 58)" stroke-linecap="butt"/>
+          <circle cx="60" cy="58" r="46" fill="none" stroke="#A7F3D0" stroke-width="14"
+            stroke-dasharray="289.03" stroke-dashoffset="213.88"
+            transform="rotate(176.4 60 58)" stroke-linecap="butt"/>
+          <text x="60" y="52" text-anchor="middle" font-family="var(--font)" font-size="16" font-weight="700" fill="var(--success)">电商 74%</text>
+          <text x="60" y="69" text-anchor="middle" font-family="var(--font)" font-size="13" fill="var(--text2)">礼品 26%</text>
+        </svg>
+        <div style="display:flex;gap:28px">
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2)">
+            <span style="width:9px;height:9px;border-radius:2px;background:var(--success);flex-shrink:0"></span>电商 <b style="color:var(--text)">950,848</b>
+          </div>
+          <div style="display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text2)">
+            <span style="width:9px;height:9px;border-radius:2px;background:#CBD5E1;flex-shrink:0"></span>礼品 <b style="color:var(--text)">334,082</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- 近30天趋势 -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-header"><h3>近30天趋势</h3>
+      <div style="display:flex;gap:20px;font-size:12px">
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--info)"></span> 新增用户</span>
+        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--success)"></span> 设备激活</span>
+        <span style="font-size:11px;color:var(--text3)">💡 点击数据点查看详情</span>
+      </div>
+    </div>
+    <div class="card-body chart-area" style="padding-bottom:8px;position:relative">
+      <div id="chart-tip" style="display:none;position:absolute;z-index:99;pointer-events:none;background:#1E293B;color:#fff;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,0.25);transform:translate(-50%,-100%)">
+        <div style="font-weight:600;margin-bottom:4px" id="tip-date"></div>
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#3B82F6;flex-shrink:0"></span>新增用户 <b id="tip-new" style="margin-left:4px"></b></div>
+        <div style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:#10B981;flex-shrink:0"></span>设备激活 <b id="tip-device" style="margin-left:4px"></b></div>
+        <div id="tip-arrow" style="position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:6px solid #1E293B"></div>
+      </div>
+      <svg viewBox="0 0 840 250" style="max-width:100%">
+        <defs>
+          <linearGradient id="g-user" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3B82F6" stop-opacity="0.15"/><stop offset="100%" stop-color="#3B82F6" stop-opacity="0"/></linearGradient>
+          <linearGradient id="g-device" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#10B981" stop-opacity="0.15"/><stop offset="100%" stop-color="#10B981" stop-opacity="0"/></linearGradient>
+        </defs>
+        <!-- Y轴网格线 -->
+        <g stroke="#E2E8F0" stroke-width="0.8">
+            <line x1="55" y1="210" x2="830" y2="210"/>
+            <line x1="55" y1="160" x2="830" y2="160"/>
+            <line x1="55" y1="110" x2="830" y2="110"/>
+            <line x1="55" y1="60" x2="830" y2="60"/>
+            <line x1="55" y1="10" x2="830" y2="10"/>
+        </g>
+        <!-- Y轴标签 -->
+        <g font-size="10" fill="#94A3B8" font-family="var(--font)">
+            <text x="48" y="214" text-anchor="end">0</text>
+            <text x="48" y="164" text-anchor="end">2,000</text>
+            <text x="48" y="114" text-anchor="end">4,000</text>
+            <text x="48" y="64" text-anchor="end">6,000</text>
+            <text x="48" y="14" text-anchor="end">8,000</text>
+        </g>
+        <!-- X轴日期标签（全30天） -->
+        <g font-size="6.5" fill="#94A3B8" font-family="var(--font)" text-anchor="middle">
+            <text x="65" y="228">06/01</text><text x="91" y="228">06/02</text><text x="117" y="228">06/03</text><text x="143" y="228">06/04</text><text x="169" y="228">06/05</text><text x="195" y="228">06/06</text><text x="221" y="228">06/07</text><text x="247" y="228">06/08</text><text x="273" y="228">06/09</text><text x="299" y="228">06/10</text><text x="325" y="228">06/11</text><text x="351" y="228">06/12</text><text x="377" y="228">06/13</text><text x="403" y="228">06/14</text><text x="429" y="228">06/15</text><text x="456" y="228">06/16</text><text x="482" y="228">06/17</text><text x="508" y="228">06/18</text><text x="534" y="228">06/19</text><text x="560" y="228">06/20</text><text x="586" y="228">06/21</text><text x="612" y="228">06/22</text><text x="638" y="228">06/23</text><text x="664" y="228">06/24</text><text x="690" y="228">06/25</text><text x="716" y="228">06/26</text><text x="742" y="228">06/27</text><text x="768" y="228">06/28</text><text x="794" y="228">06/29</text><text x="820" y="228">06/30</text>
+        </g>
+        <!-- 新增用户：面积 + 折线 -->
+        <polygon points="65,131 91,126 117,136 143,120 169,125 195,114 221,108 247,123 273,117 299,111 325,132 351,105 377,101 403,93 429,113 456,120 482,124 508,127 534,136 560,99 586,108 612,120 638,114 664,129 690,138 716,122 742,102 768,111 794,80 820,63 820,210 65,210" fill="url(#g-user)"/>
+        <polyline points="65,131 91,126 117,136 143,120 169,125 195,114 221,108 247,123 273,117 299,111 325,132 351,105 377,101 403,93 429,113 456,120 482,124 508,127 534,136 560,99 586,108 612,120 638,114 664,129 690,138 716,122 742,102 768,111 794,80 820,63" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- 新增用户数据点 -->
+        <circle cx="65" cy="131" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,0)"/>
+          <circle cx="91" cy="126" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,1)"/>
+          <circle cx="117" cy="136" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,2)"/>
+          <circle cx="143" cy="120" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,3)"/>
+          <circle cx="169" cy="125" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,4)"/>
+          <circle cx="195" cy="114" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,5)"/>
+          <circle cx="221" cy="108" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,6)"/>
+          <circle cx="247" cy="123" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,7)"/>
+          <circle cx="273" cy="117" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,8)"/>
+          <circle cx="299" cy="111" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,9)"/>
+          <circle cx="325" cy="132" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,10)"/>
+          <circle cx="351" cy="105" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,11)"/>
+          <circle cx="377" cy="101" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,12)"/>
+          <circle cx="403" cy="93" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,13)"/>
+          <circle cx="429" cy="113" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,14)"/>
+          <circle cx="456" cy="120" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,15)"/>
+          <circle cx="482" cy="124" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,16)"/>
+          <circle cx="508" cy="127" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,17)"/>
+          <circle cx="534" cy="136" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,18)"/>
+          <circle cx="560" cy="99" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,19)"/>
+          <circle cx="586" cy="108" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,20)"/>
+          <circle cx="612" cy="120" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,21)"/>
+          <circle cx="638" cy="114" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,22)"/>
+          <circle cx="664" cy="129" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,23)"/>
+          <circle cx="690" cy="138" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,24)"/>
+          <circle cx="716" cy="122" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,25)"/>
+          <circle cx="742" cy="102" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,26)"/>
+          <circle cx="768" cy="111" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,27)"/>
+          <circle cx="794" cy="80" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,28)"/>
+          <circle cx="820" cy="63" r="3.5" fill="#3B82F6" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,29)"/>
+        <!-- 设备激活：面积 + 折线 -->
+        <polygon points="65,156 91,152 117,159 143,146 169,149 195,142 221,138 247,150 273,145 299,140 325,154 351,136 377,132 403,126 429,141 456,146 482,148 508,150 534,156 560,130 586,136 612,146 638,141 664,150 690,157 716,146 742,131 768,137 794,116 820,102 820,210 65,210" fill="url(#g-device)"/>
+        <polyline points="65,156 91,152 117,159 143,146 169,149 195,142 221,138 247,150 273,145 299,140 325,154 351,136 377,132 403,126 429,141 456,146 482,148 508,150 534,156 560,130 586,136 612,146 638,141 664,150 690,157 716,146 742,131 768,137 794,116 820,102" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- 设备激活数据点 -->
+        <circle cx="65" cy="156" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,0)"/>
+          <circle cx="91" cy="152" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,1)"/>
+          <circle cx="117" cy="159" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,2)"/>
+          <circle cx="143" cy="146" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,3)"/>
+          <circle cx="169" cy="149" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,4)"/>
+          <circle cx="195" cy="142" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,5)"/>
+          <circle cx="221" cy="138" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,6)"/>
+          <circle cx="247" cy="150" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,7)"/>
+          <circle cx="273" cy="145" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,8)"/>
+          <circle cx="299" cy="140" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,9)"/>
+          <circle cx="325" cy="154" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,10)"/>
+          <circle cx="351" cy="136" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,11)"/>
+          <circle cx="377" cy="132" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,12)"/>
+          <circle cx="403" cy="126" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,13)"/>
+          <circle cx="429" cy="141" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,14)"/>
+          <circle cx="456" cy="146" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,15)"/>
+          <circle cx="482" cy="148" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,16)"/>
+          <circle cx="508" cy="150" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,17)"/>
+          <circle cx="534" cy="156" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,18)"/>
+          <circle cx="560" cy="130" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,19)"/>
+          <circle cx="586" cy="136" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,20)"/>
+          <circle cx="612" cy="146" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,21)"/>
+          <circle cx="638" cy="141" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,22)"/>
+          <circle cx="664" cy="150" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,23)"/>
+          <circle cx="690" cy="157" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,24)"/>
+          <circle cx="716" cy="146" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,25)"/>
+          <circle cx="742" cy="131" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,26)"/>
+          <circle cx="768" cy="137" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,27)"/>
+          <circle cx="794" cy="116" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,28)"/>
+          <circle cx="820" cy="102" r="3.5" fill="#10B981" stroke="#fff" stroke-width="1.5" style="cursor:pointer" onclick="App.showChartTip(event,29)"/>
+      </svg>
+      <!-- 汇总指标 -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:4px 4px 0">
+        <div style="text-align:center;padding:10px;background:#F8FAFC;border-radius:var(--radius)">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">30日累计新增用户</div>
+          <div style="font-size:20px;font-weight:700;color:var(--info)">114,140</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#F8FAFC;border-radius:var(--radius)">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">30日累计设备激活</div>
+          <div style="font-size:20px;font-weight:700;color:var(--success)">81,650</div>
+        </div>
+        <div style="text-align:center;padding:10px;background:#F8FAFC;border-radius:var(--radius)">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px">日均新增用户</div>
+          <div style="font-size:20px;font-weight:700;color:var(--text)">3,804</div>
+          <div style="font-size:11px;color:var(--text2);margin-top:2px">峰值 5,880 · 谷值 2,880</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<div class="page" id="page-user">
+  <div class="page-header"><h2>用户管理</h2></div>
+  <div class="card">
+    <div class="card-body">
+      <div class="search-bar" style="margin-bottom:16px">
+        <input type="text" placeholder="UID / 手机号 / 邮箱搜索...">
+        <select><option>全部状态</option><option>正常</option><option>已禁用</option><option>已注销</option></select>
+        <input type="date" style="width:140px" title="注册开始日期">
+        <span style="color:var(--text3);font-size:13px">—</span>
+        <input type="date" style="width:140px" title="注册结束日期">
+        <button class="btn btn-outline"><svg class="icon"><use href="#icon-filter"/></svg>筛选</button>
+      </div>
+      <div class="table-wrap">
+<table class="data-table">
+        <thead><tr><th>昵称</th><th>UID</th><th>手机号</th><th>邮箱</th><th>渠道</th><th>注册时间</th><th>绑定设备</th><th>最后活跃</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr class="clickable" onclick="App.openUserDrawer('张大山','100001')"><td style="font-weight:600">张大山</td><td style="font-weight:600;color:var(--primary)">100001</td><td>138****5678</td><td>zhang***@gmail.com</td><td>电商</td><td>2026-01-15 10:23</td><td>ZN-R3-001</td><td>2分钟前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();App.openUserDrawer('张大山','100001')"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr class="clickable" onclick="App.openUserDrawer('李小妹','100002')"><td style="font-weight:600">李小妹</td><td style="font-weight:600;color:var(--primary)">100002</td><td>139****9012</td><td>li***@outlook.com</td><td>电商</td><td>2026-02-03 15:41</td><td>ZN-R3-012</td><td>15分钟前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();App.openUserDrawer('李小妹','100002')"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr class="clickable" onclick="App.openUserDrawer('王铁柱','100003')"><td style="font-weight:600">王铁柱</td><td style="font-weight:600;color:var(--primary)">100003</td><td>137****3456</td><td>wang***@163.com</td><td>礼品</td><td>2026-02-18 08:12</td><td>ZN-R3-023</td><td>1小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();App.openUserDrawer('王铁柱','100003')"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">陈小华</td><td style="font-weight:600;color:var(--primary)">100004</td><td>136****7890</td><td>chen***@icloud.com</td><td>其他</td><td>2026-03-07 22:05</td><td>—</td><td>3天前</td><td><span class="badge danger">已禁用</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">赵大勇</td><td style="font-weight:600;color:var(--primary)">100005</td><td>135****2345</td><td>zhao***@qq.com</td><td>电商</td><td>2026-03-22 14:33</td><td>ZN-R3-034</td><td>12小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">孙行者</td><td style="font-weight:600;color:var(--primary)">100006</td><td>134****8901</td><td>sun***@gmail.com</td><td>礼品</td><td>2026-04-10 18:20</td><td>ZN-R3-045</td><td>5分钟前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">刘一手</td><td style="font-weight:600;color:var(--primary)">100007</td><td>133****4567</td><td>liu***@126.com</td><td>电商</td><td>2026-05-05 09:55</td><td>—</td><td>1天前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">周星星</td><td style="font-weight:600;color:var(--primary)">100008</td><td>132****0123</td><td>zhou***@sina.com</td><td>其他</td><td>2026-06-01 11:08</td><td>ZN-R3-056</td><td>刚刚</td><td><span class="badge default">已注销</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+        </tbody>
+      </table>
+              </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:13px;color:var(--text2)">
+        <span>共 1,284,930 条，当前第 1/128493 页</span>
+        <div style="display:flex;gap:4px">
+          <button class="btn btn-outline btn-sm" disabled>上一页</button>
+          <button class="btn btn-outline btn-sm active">1</button>
+          <button class="btn btn-outline btn-sm">2</button>
+          <button class="btn btn-outline btn-sm">3</button>
+          <button class="btn btn-outline btn-sm">...</button>
+          <button class="btn btn-outline btn-sm">下一页</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-cms">
+  <div class="page-header"><h2>内容管理 CMS</h2></div>
+  <div class="card" style="margin-bottom:0;border-radius:var(--radius-lg) var(--radius-lg) 0 0">
+    <div class="tabs">
+      <div class="tab-item active" onclick="App.switchCmsTab('splash',this)">闪屏</div>
+      <div class="tab-item" onclick="App.switchCmsTab('banner',this)">Banner</div>
+      <div class="tab-item" onclick="App.switchCmsTab('protocol',this)">协议管理</div>
+    </div>
+  </div>
+
+  <!-- 协议管理 tab -->
+  <div class="card" id="cms-protocol" style="border-radius:0 0 var(--radius-lg) var(--radius-lg);display:none">
+    <div class="card-header"><span>协议列表</span></div>
+    <div class="card-body no-padding">
+      <div class="table-wrap">
+<table class="data-table">
+        <thead><tr><th>协议名称</th><th>版本号</th><th>生效日期</th><th>适用地区</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600">用户服务协议</td><td>V3.2</td><td>2026-07-01</td><td>全球</td><td><span class="badge success">生效中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-xs" onclick="App.editProtocol(this)"><svg class="icon"><use href="#icon-edit"/></svg>编辑</button></div></td></tr>
+          <tr><td style="font-weight:600">隐私政策</td><td>V2.8</td><td>2026-06-15</td><td>全球</td><td><span class="badge success">生效中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-xs" onclick="App.editProtocol(this)"><svg class="icon"><use href="#icon-edit"/></svg>编辑</button></div></td></tr>
+        </tbody>
+      </table>
+              </div>
+    </div>
+  </div>
+
+  <!-- 闪屏 tab -->
+  <div class="card" id="cms-splash" style="border-radius:0 0 var(--radius-lg) var(--radius-lg)">
+    <div class="card-header"><span></span><button class="btn btn-primary btn-sm" onclick="App.showModal('splashAdModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建闪屏</button></div>
+    <div class="card-body no-padding">
+      <div class="table-wrap">
+<table class="data-table">
+        <thead><tr><th>预览</th><th>广告名称</th><th>跳转链接</th><th>展示时段</th><th>频控</th><th>展示量</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr><td><div style="width:60px;height:36px;background:linear-gradient(135deg,#4F6EF7,#818CF8);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">指闻新功能</div></td><td style="font-weight:600">指闻 V3.0 全新上线</td><td>/app/v3-intro</td><td>全天</td><td>1次/天</td><td>328,591</td><td><span class="badge success">投放中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button><button class="btn btn-ghost btn-xs" style="color:var(--danger)"><svg class="icon"><use href="#icon-trash"/></svg></button></div></td></tr>
+          <tr><td><div style="width:60px;height:36px;background:linear-gradient(135deg,#10B981,#34D399);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">暑期活动</div></td><td style="font-weight:600">暑期健康挑战赛</td><td>/campaign/summer2026</td><td>07:00-24:00</td><td>2次/天</td><td>187,332</td><td><span class="badge success">投放中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button><button class="btn btn-ghost btn-xs" style="color:var(--danger)"><svg class="icon"><use href="#icon-trash"/></svg></button></div></td></tr>
+        </tbody>
+      </table>
+              </div>
+    </div>
+  </div>
+
+  <!-- Banner tab -->
+  <div class="card" id="cms-banner" style="border-radius:0 0 var(--radius-lg) var(--radius-lg);display:none">
+    <div class="card-header"><span></span><button class="btn btn-primary btn-sm" onclick="App.showModal('bannerModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建 Banner</button></div>
+    <div class="card-body no-padding">
+      <div class="table-wrap">
+<table class="data-table">
+        <thead><tr><th>预览</th><th>Banner 名称</th><th>跳转链接</th><th>展示位置</th><th>展示时段</th><th>展示量</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr><td><div style="width:80px;height:40px;background:linear-gradient(135deg,#8B5CF6,#A78BFA);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">新功能</div></td><td style="font-weight:600">指闻 V3.0 全新上线</td><td>/app/v3-intro</td><td>首页顶部</td><td>全天</td><td>328,591</td><td><span class="badge success">投放中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button><button class="btn btn-ghost btn-xs" style="color:var(--danger)"><svg class="icon"><use href="#icon-trash"/></svg></button></div></td></tr>
+          <tr><td><div style="width:80px;height:40px;background:linear-gradient(135deg,#F59E0B,#FBBF24);border-radius:4px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">活动</div></td><td style="font-weight:600">暑期健康挑战赛</td><td>/campaign/summer2026</td><td>首页中部</td><td>07:00-24:00</td><td>187,332</td><td><span class="badge success">投放中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button><button class="btn btn-ghost btn-xs" style="color:var(--danger)"><svg class="icon"><use href="#icon-trash"/></svg></button></div></td></tr>
+        </tbody>
+      </table>
+              </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-feedback">
+  <div class="page-header"><h2>问题反馈</h2><span style="font-size:13px;color:var(--text2)">待处理 2 · 已处理 4</span></div>
+
+  <div class="card"><div class="card-body no-padding">
+    <div class="table-wrap">
+<table class="data-table">
+      <thead><tr><th>提交时间</th><th>用户</th><th>反馈类型</th><th>反馈内容</th><th>联系方式</th><th>设备/版本</th><th>允许跟进</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>
+        <tr><td>2026-07-07 14:22</td><td>张大山</td><td><span class="badge badge-type">心率测量</span></td><td>心率数据同步延迟严重，戒指已测量但 App 端数据延迟约 2 分钟</td><td>138****5678</td><td>ZN-R3-001 / v2.4.1</td><td><span style="font-size:13px;color:var(--success);font-weight:600">是</span></td><td><span class="badge warning">待处理</span></td><td><button class="btn btn-primary btn-xs" onclick="App.resolveFeedback(this)">标记已处理</button></td></tr>
+        <tr><td>2026-07-07 11:30</td><td>李明</td><td><span class="badge badge-type">蓝牙连接</span></td><td>戒指充电接触不良，放入充电仓后橙色灯不亮，需要多次调整位置</td><td>139****1234</td><td>ZN-R3-023 / v2.4.2</td><td><span style="font-size:13px;color:var(--success);font-weight:600">是</span></td><td><span class="badge warning">待处理</span></td><td><button class="btn btn-primary btn-xs" onclick="App.resolveFeedback(this)">标记已处理</button></td></tr>
+        <tr><td>2026-07-06 16:05</td><td>王小红</td><td><span class="badge badge-type">数据不准</span></td><td>血压数据与医院测量值偏差较大，早上空腹测量时差距约 8-12 mmHg</td><td>136****7890</td><td>ZN-R3-045 / v2.4.1</td><td><span style="font-size:13px;color:var(--danger);font-weight:600">否</span></td><td><span class="badge success">已处理</span></td><td><span style="font-size:12px;color:var(--text3)">已回复</span></td></tr>
+        <tr><td>2026-07-06 09:18</td><td>赵四</td><td><span class="badge badge-type">绑定问题</span></td><td>首次绑定戒指时配对失败，重复扫码三次后才成功连接</td><td>137****4560</td><td>ZN-R3-012 / v2.4.3</td><td><span style="font-size:13px;color:var(--success);font-weight:600">是</span></td><td><span class="badge success">已处理</span></td><td><span style="font-size:12px;color:var(--text3)">已回复</span></td></tr>
+        <tr><td>2026-07-05 08:42</td><td>孙七</td><td><span class="badge badge-type">计步误差</span></td><td>步数统计与实际偏差较大，跑步 5 公里只记录了约 3000 步</td><td>132****6678</td><td>ZN-R3-034 / v2.4.1</td><td><span style="font-size:13px;color:var(--success);font-weight:600">是</span></td><td><span class="badge success">已处理</span></td><td><span style="font-size:12px;color:var(--text3)">已回复</span></td></tr>
+        <tr><td>2026-07-04 21:15</td><td>周星星</td><td><span class="badge badge-type">睡眠错误</span></td><td>睡眠数据经常断档，凌晨 2-4 点之间无任何数据记录，已出现三次</td><td>132****0123</td><td>ZN-R3-056 / v2.4.2</td><td><span style="font-size:13px;color:var(--success);font-weight:600">是</span></td><td><span class="badge success">已处理</span></td><td><span style="font-size:12px;color:var(--text3)">已回复</span></td></tr>
+      </tbody>
+    </table>
+              </div>
+  </div></div>
+</div>
+
+<div class="page" id="page-version">
+  <div class="page-header"><h2>OTA管理</h2><div class="actions"><button class="btn btn-primary" onclick="App.showModal('versionModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建OTA</button></div></div>
+
+  <div class="card"><div class="card-body no-padding">
+    <div class="table-wrap">
+<table class="data-table">
+      <thead><tr><th>版本号</th><th>平台</th><th>发布日期</th><th>发布方式</th><th>灰度比例</th><th>下载量</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:600">v2.4.3</td><td><span class="badge info">iOS</span></td><td>2026-07-07</td><td><span class="badge warning">灰度中</span></td><td><div style="display:flex;align-items:center;gap:8px"><input type="range" min="0" max="100" value="60" style="width:80px;accent-color:var(--primary)"><span style="font-size:13px;font-weight:600">60%</span></div></td><td>48,291</td><td><span class="badge success">生效中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="App.showModal('versionModal')"><svg class="icon"><use href="#icon-edit"/></svg>编辑</button></div></td></tr>
+        <tr><td style="font-weight:600">v2.4.3</td><td><span class="badge success">Android</span></td><td>2026-07-06</td><td><span class="badge success">全量</span></td><td style="color:var(--text3)">已完成</td><td>126,850</td><td><span class="badge success">生效中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="App.showModal('versionModal')"><svg class="icon"><use href="#icon-edit"/></svg>编辑</button></div></td></tr>
+        <tr><td style="font-weight:600">v2.4.1</td><td><span class="badge info">iOS</span></td><td>2026-06-20</td><td><span class="badge warning">灰度中</span></td><td style="color:var(--text3)">已完成</td><td>218,443</td><td><span class="badge success">生效中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="App.showModal('versionModal')"><svg class="icon"><use href="#icon-edit"/></svg>编辑</button></div></td></tr>
+        <tr><td style="font-weight:600">v2.4.0</td><td><span class="badge success">Android</span></td><td>2026-06-15</td><td><span class="badge success">全量</span></td><td style="color:var(--text3)">已完成</td><td>127,443</td><td><span class="badge success">生效中</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-outline btn-xs" onclick="App.showModal('versionModal')"><svg class="icon"><use href="#icon-edit"/></svg>编辑</button></div></td></tr>
+      </tbody>
+    </table>
+              </div>
+  </div></div>
+</div>
+
+
+
+<div class="page" id="page-system">
+  <div class="page-header"><h2>系统管理</h2></div>
+
+  <!-- 管理员列表 -->
+  <div class="card" id="sys-admins">
+    <div class="card-header"><span></span><button class="btn btn-primary btn-sm" onclick="App.showModal('adminModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建管理员</button></div>
+    <div class="card-body no-padding">
+      <div class="table-wrap">
+<table class="data-table">
+        <thead><tr><th>姓名</th><th>角色</th><th>手机号</th><th>邮箱</th><th>最后登录</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr><td style="font-weight:600">张运营</td><td><span class="badge info">运营管理</span></td><td>138****9999</td><td>zhangyun@zhiwen.com</td><td>刚刚</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">李开发</td><td><span class="badge warning">开发工程师</span></td><td>139****8888</td><td>likaifa@zhiwen.com</td><td>1小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">王客服</td><td><span class="badge success">客服专员</span></td><td>137****7777</td><td>wangke@zhiwen.com</td><td>3小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">赵分析</td><td><span class="badge purple">数据分析</span></td><td>136****6666</td><td>zhaofen@zhiwen.com</td><td>1天前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">孙技术</td><td><span class="badge warning">开发工程师</span></td><td>135****5555</td><td>sunjishu@zhiwen.com</td><td>5分钟前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+        </tbody>
+      </table>
+              </div>
+    </div>
+  </div>
+
+  
+</div>
+<!-- end main-content + app-layout -->
+
+<!-- 用户详情抽屉 -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="App.closeDrawer()"></div>
+<div class="drawer" id="userDrawer">
+  <div class="drawer-header"><h3 id="drawerTitle">用户详情</h3><button class="modal-close" onclick="App.closeDrawer()"><svg class="icon"><use href="#icon-x"/></svg></button></div>
+  <div class="drawer-tabs">
+    <div class="drawer-tab active" onclick="App.switchDrawerTab('profile',this)">基本信息</div>
+    <div class="drawer-tab" onclick="App.switchDrawerTab('device',this)">绑定设备</div>
+  </div>
+  <div class="drawer-body">
+    <div id="drawer-tab-profile">
+      <div style="text-align:center;margin-bottom:20px">
+        <div id="drawerProfileAvatar" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#818CF8);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;color:#fff;font-size:24px;font-weight:700">张</div>
+        <div id="drawerProfileName" style="font-size:17px;font-weight:700">张大山</div>
+        <div style="font-size:13px;color:var(--text2)">UID: <span id="drawerUid">100001</span></div>
+      </div>
+      <div style="background:#F8FAFC;border-radius:var(--radius);padding:14px">
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light)"><span style="color:var(--text2);font-size:13px">手机号</span><span style="font-size:13px;font-weight:600">138****5678</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light)"><span style="color:var(--text2);font-size:13px">邮箱</span><span style="font-size:13px;font-weight:600">zhang***@gmail.com</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light)"><span style="color:var(--text2);font-size:13px">注册时间</span><span style="font-size:13px">2026-01-15 10:23</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light)"><span style="color:var(--text2);font-size:13px">最后活跃</span><span style="font-size:13px">2分钟前</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light)"><span style="color:var(--text2);font-size:13px">注册渠道</span><span style="font-size:13px">Apple Store</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span style="color:var(--text2);font-size:13px">状态</span><span class="badge success">正常</span></div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="btn btn-danger btn-sm" style="flex:1"><svg class="icon"><use href="#icon-lock"/></svg>禁用帐号</button>
+      </div>
+    </div>
+
+    <div id="drawer-tab-device" style="display:none">
+      <div class="card" style="margin-bottom:12px;padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;color:var(--primary)"><svg class="icon icon-xl"><use href="#icon-device"/></svg></div>
+            <div><div style="font-size:15px;font-weight:600">我的戒指</div><div style="font-size:12px;color:var(--text2)">已绑定 · 最后上报 2分钟前</div></div>
+          </div>
+          <span class="badge success" style="font-size:11px">在线</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">设备名称</span><span style="font-weight:600">我的戒指</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">固件版本</span><span style="font-weight:600">v2.4.1</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">硬件版本</span><span style="font-weight:600">HW-R3-V2</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">序列号</span><span style="font-weight:600;font-family:monospace">SN2026A00001</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">MAC地址</span><span style="font-weight:600;font-family:monospace">A4:C1:38:7F:B2:09</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">蓝牙SN</span><span style="font-weight:600;font-family:monospace">BT-ZNR3-2026A00001</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">采集周期</span><span style="font-weight:600">每 5 分钟</span></div>
+        </div>
+        <button class="btn btn-danger btn-sm" style="margin-top:12px;width:100%" onclick="App.unbindDevice(this)"><svg class="icon"><use href="#icon-unlink"/></svg>解除绑定</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 通用弹窗 -->
+<div class="modal-overlay" id="genericModal"><div class="modal">
+  <div class="modal-header"><h3 id="genericModalTitle">提示</h3><button class="modal-close" onclick="App.closeModal('genericModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-body"><div id="genericModalBody"></div></div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('genericModal')">取消</button><button class="btn btn-primary" onclick="App.closeModal('genericModal')">确认</button></div>
+</div></div>
+
+<!-- OTA 固件管理弹窗 -->
+
+<!-- 版本弹窗 -->
+<div class="modal-overlay" id="versionModal"><div class="modal" style="max-width:520px">
+  <div class="modal-header"><h3>新建OTA版本</h3><button class="modal-close" onclick="App.closeModal('versionModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-body">
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">版本号</label>
+      <input type="text" placeholder="如 2.5.0" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">平台</label>
+      <div style="display:flex;gap:20px;padding:8px 0">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" checked style="width:16px;height:16px;accent-color:var(--primary);cursor:pointer"> iOS</label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" checked style="width:16px;height:16px;accent-color:var(--primary);cursor:pointer"> Android</label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px"><input type="checkbox" style="width:16px;height:16px;accent-color:var(--primary);cursor:pointer"> HarmonyOS</label>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">安装包上传</label>
+      <div style="border:2px dashed var(--border);border-radius:var(--radius-lg);padding:28px;text-align:center;background:var(--bg);cursor:pointer;transition:all 0.2s" onmouseenter="this.style.borderColor='var(--primary)';this.style.background='var(--primary-light)'" onmouseleave="this.style.borderColor='var(--border)';this.style.background='var(--bg)'">
+        <svg class="icon icon-2xl" style="color:var(--text3);margin-bottom:8px"><use href="#icon-upload"/></svg>
+        <div style="font-size:14px;color:var(--text2);margin-bottom:4px">点击或拖拽上传安装包</div>
+        <div style="font-size:12px;color:var(--text3)">支持 .apk / .ipa / .app 格式，最大 500MB</div>
+        <input type="file" accept=".apk,.ipa,.app" style="display:none">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">更新日志</label>
+      <textarea placeholder="请输入更新内容..." style="width:100%;height:80px;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;resize:vertical"></textarea>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">发布方式</label>
+      <div style="display:flex;gap:12px;margin-bottom:12px">
+        <label onclick="document.getElementById('graySlider').style.display='';this.querySelector('input').checked=true" style="flex:1;display:flex;align-items:center;gap:8px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:14px;transition:all 0.2s"><input type="radio" name="releaseType" checked style="accent-color:var(--primary);cursor:pointer"> 灰度发布</label>
+        <label onclick="document.getElementById('graySlider').style.display='none';this.querySelector('input').checked=true" style="flex:1;display:flex;align-items:center;gap:8px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:14px;transition:all 0.2s"><input type="radio" name="releaseType" style="accent-color:var(--primary);cursor:pointer"> 全量发布</label>
+      </div>
+      <div id="graySlider" style="display:flex;align-items:center;gap:12px;background:var(--bg);padding:12px 14px;border-radius:var(--radius)">
+        <span style="font-size:13px;color:var(--text2);white-space:nowrap">灰度比例</span>
+        <input type="range" min="1" max="100" value="20" style="flex:1;accent-color:var(--primary)">
+        <span style="font-size:14px;font-weight:600;min-width:40px;text-align:right">20%</span>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('versionModal')">取消</button><button class="btn btn-primary" onclick="App.closeModal('versionModal')">创建</button></div>
+</div></div>
+
+<!-- 协议弹窗 -->
+<div class="modal-overlay" id="protocolModal"><div class="modal">
+  <div class="modal-header"><h3>编辑协议</h3><button class="modal-close" onclick="App.closeModal('protocolModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-body">
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">协议名称</label>
+      <input type="text" id="protocolName" placeholder="请输入协议名称" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">版本号</label>
+      <input type="text" id="protocolVersion" placeholder="如 V1.0" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">协议内容</label>
+      <textarea id="protocolContent" placeholder="请输入协议内容..." style="width:100%;height:180px;padding:12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;resize:vertical;line-height:1.7"></textarea>
+    </div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('protocolModal')">取消</button><button class="btn btn-primary" onclick="App.saveProtocol()">保存</button></div>
+</div></div>
+
+<!-- 闪屏弹窗 -->
+<div class="modal-overlay" id="splashAdModal"><div class="modal">
+  <div class="modal-header"><h3>新建闪屏</h3><button class="modal-close" onclick="App.closeModal('splashAdModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-body">
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">广告名称</label>
+      <input type="text" placeholder="请输入广告名称" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">上传图片</label>
+      <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--text3);cursor:pointer;transition:all 0.2s" onmouseenter="this.style.borderColor='var(--primary)';this.style.backgroundColor='var(--primary-50)'" onmouseleave="this.style.borderColor='var(--border)';this.style.backgroundColor='transparent'">
+        <svg class="icon icon-2xl" style="margin-bottom:6px"><use href="#icon-cloud-upload"/></svg><div style="font-size:13px">点击或拖拽上传图片</div>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">跳转链接</label>
+      <input type="text" placeholder="如 /campaign/summer2026" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('splashAdModal')">取消</button><button class="btn btn-primary" onclick="App.closeModal('splashAdModal')">创建</button></div>
+</div></div>
+
+<!-- Banner 弹窗 -->
+<div class="modal-overlay" id="bannerModal"><div class="modal">
+  <div class="modal-header"><h3>新建 Banner</h3><button class="modal-close" onclick="App.closeModal('bannerModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-body">
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">Banner 名称</label>
+      <input type="text" placeholder="请输入 Banner 名称" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">上传图片</label>
+      <div style="border:2px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--text3);cursor:pointer;transition:all 0.2s" onmouseenter="this.style.borderColor='var(--primary)';this.style.backgroundColor='var(--primary-50)'" onmouseleave="this.style.borderColor='var(--border)';this.style.backgroundColor='transparent'">
+        <svg class="icon icon-2xl" style="margin-bottom:6px"><use href="#icon-upload"/></svg><div style="font-size:13px">点击或拖拽上传 Banner 图</div><div style="font-size:11px;color:var(--text3)">支持 JPG/PNG，建议尺寸 750×300</div>
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">跳转链接</label>
+      <input type="text" placeholder="如 /campaign/summer2026" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">展示位置</label>
+      <select style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;background:var(--card)"><option>首页顶部</option><option>首页中部</option><option>健康页</option><option>设备页</option></select>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">展示时段</label>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="time" value="00:00" style="height:40px;padding:0 10px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;flex:1">
+        <span style="color:var(--text2)">至</span>
+        <input type="time" value="23:59" style="height:40px;padding:0 10px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:13px;flex:1">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('bannerModal')">取消</button><button class="btn btn-primary" onclick="App.closeModal('bannerModal')">创建</button></div>
+</div></div>
+
+
+
+<!-- 管理员弹窗 -->
+<div class="modal-overlay" id="adminModal"><div class="modal">
+  <div class="modal-header"><h3>新建管理员</h3><button class="modal-close" onclick="App.closeModal('adminModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-body">
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">姓名</label>
+      <input type="text" placeholder="请输入姓名" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">角色</label>
+      <select style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;background:var(--card)"><option>运营管理</option><option>客服专员</option><option>开发工程师</option><option>数据分析</option><option>只读观察员</option></select>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">手机号</label>
+      <input type="text" placeholder="请输入手机号" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">邮箱</label>
+      <input type="email" placeholder="请输入邮箱" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('adminModal')">取消</button><button class="btn btn-primary" onclick="App.closeModal('adminModal')">创建</button></div>
+</div></div>
+
+
+<!-- 设备详情弹窗 -->
+
+<!-- Toast 容器 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ===== 指闻运营后台 - 交互逻辑 =====
+(function(){
+  'use strict';
+
+  const App = window.App = {
+    currentPage: 'dashboard',
+    sidebarCollapsed: false,
+
+    pageTitles: {
+      dashboard:'数据看板', user:'用户管理',
+      cms:'内容管理 CMS', feedback:'问题反馈', version:'OTA管理',
+      system:'系统管理'
+    },
+
+    // 导航切换
+    navigate(page) {
+      // 更新侧边栏
+      document.querySelectorAll('.nav-item').forEach(function(el){
+        el.classList.toggle('active', el.dataset.page === page);
+      });
+      // 更新页面
+      document.querySelectorAll('.page').forEach(function(el){
+        el.classList.toggle('active', el.id === 'page-' + page);
+      });
+      // 更新面包屑
+      var bc = document.getElementById('breadcrumbCurrent');
+      if (bc) bc.textContent = this.pageTitles[page] || page;
+      this.currentPage = page;
+    },
+
+    // 弹窗
+    showModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.add('show');
+      m.style.display = 'flex';
+      // ESC关闭
+      var self = this;
+      m._escHandler = function(e){ if(e.key==='Escape'){ self.closeModal(id); }};
+      document.addEventListener('keydown', m._escHandler);
+    },
+    closeModal(id) {
+      var m = document.getElementById(id);
+      if (!m) return;
+      m.classList.remove('show');
+      if (m._escHandler) {
+        document.removeEventListener('keydown', m._escHandler);
+        delete m._escHandler;
+      }
+      setTimeout(function(){ if(!m.classList.contains('show')) m.style.display = 'none'; }, 250);
+    },
+
+    // 用户抽屉
+    openUserDrawer(name, uid) {
+      document.getElementById('drawerUid').textContent = uid;
+      document.getElementById('drawerTitle').textContent = name;
+      document.getElementById('drawerProfileName').textContent = name;
+      document.getElementById('drawerProfileAvatar').textContent = name.charAt(0);
+      document.getElementById('drawerOverlay').classList.add('show');
+      document.getElementById('drawerOverlay').style.display = 'block';
+      document.getElementById('userDrawer').classList.add('open');
+    },
+    closeDrawer() {
+      document.getElementById('userDrawer').classList.remove('open');
+      document.getElementById('drawerOverlay').classList.remove('show');
+      setTimeout(function(){
+        document.getElementById('drawerOverlay').style.display = 'none';
+      }, 300);
+    },
+    switchDrawerTab(tab, el) {
+      document.querySelectorAll('.drawer-tab').forEach(function(t){ t.classList.remove('active'); });
+      el.classList.add('active');
+      ['profile','device'].forEach(function(t){
+        document.getElementById('drawer-tab-' + t).style.display = (t === tab) ? '' : 'none';
+      });
+    },
+
+
+    // 侧边栏折叠
+    toggleSidebar() {
+      this.sidebarCollapsed = !this.sidebarCollapsed;
+      document.getElementById('appLayout').classList.toggle('collapsed', this.sidebarCollapsed);
+    },
+
+    // CMS tab切换
+    switchCmsTab(tab, el) {
+      document.querySelectorAll('#page-cms .tab-item').forEach(function(t){ t.classList.remove('active'); });
+      el.classList.add('active');
+      document.getElementById('cms-protocol').style.display = (tab === 'protocol') ? '' : 'none';
+      document.getElementById('cms-splash').style.display = (tab === 'splash') ? '' : 'none';
+      document.getElementById('cms-banner').style.display = (tab === 'banner') ? '' : 'none';
+      
+    },
+    editProtocol(btn) {
+      var row = btn.closest('tr');
+      var cells = row.querySelectorAll('td');
+      document.getElementById('protocolName').value = cells[0].textContent.trim();
+      document.getElementById('protocolVersion').value = cells[1].textContent.trim();
+      document.getElementById('protocolContent').value = cells[0].textContent.trim() === '用户服务协议'
+        ? '感谢您使用指闻 App！\n\n一、服务条款的接受\n1.1 本协议是您与指闻平台之间关于使用指闻 App 服务所订立的协议。\n1.2 您通过注册、使用指闻 App 即表示您已阅读并同意本协议全部条款。\n\n二、服务内容\n2.1 指闻 App 提供健康数据监测、分析及报告服务，包括但不限于心率、血氧、体温、睡眠等指标。\n2.2 指闻 App 需配合指闻智能戒指设备使用。\n\n三、用户权利与义务\n3.1 用户应提供真实、准确的个人信息。\n3.2 用户应妥善保管帐号和密码。\n\n四、免责声明\n4.1 指闻 App 提供的健康数据仅供参考，不作为医疗诊断依据。\n\n生效日期：2026年7月1日'
+        : '指闻 App 非常重视您的隐私保护。\n\n一、信息收集\n1.1 我们收集您的健康数据（心率、血氧、体温、睡眠等），用于为您提供健康分析服务。\n1.2 我们收集您的设备信息（型号、固件版本等），用于优化服务体验。\n\n二、信息使用\n2.1 您的健康数据仅用于为您生成个人健康报告和趋势分析。\n2.2 去标识化后的数据可能用于产品改进和学术研究。\n\n三、信息安全\n3.1 我们采用业界领先的加密技术保护您的数据。\n\n四、您的权利\n4.1 您可以随时导出或删除您的数据。\n\n生效日期：2026年6月15日';
+      this.showModal('protocolModal');
+    },
+    saveProtocol() {
+      this.closeModal('protocolModal');
+      this.showToast('协议已保存', 'success');
+    },
+
+
+
+
+    // 反馈处理
+    resolveFeedback(btn) {
+      var row = btn.closest('tr');
+      var statusCell = row.querySelectorAll('td')[7];
+      var actionCell = row.querySelectorAll('td')[8];
+      statusCell.innerHTML = '<span class="badge success">已处理</span>';
+      actionCell.innerHTML = '<span style="font-size:12px;color:var(--text3)">已回复</span>';
+      App.showToast('已标记为已处理', 'success');
+    },
+
+    // 数据导出
+    exportData(type) {
+      App.showToast('正在生成 ' + type + ' 导出文件...', 'info');
+      setTimeout(function(){ App.showToast('导出成功！文件已开始下载', 'success'); }, 1500);
+    },
+
+    // 退出登录
+    logout() {
+      document.getElementById('appLayout').style.display = 'none';
+      document.getElementById('loginPage').style.display = '';
+      document.getElementById('adminPassword').value = '';
+      document.getElementById('loginError').style.display = 'none';
+      document.getElementById('loginBtn').disabled = true;
+    },
+
+  };
+
+  // ===== 登录 =====
+  window.checkLoginBtn = function() {
+    var acc = document.getElementById('adminAccount').value.trim();
+    var pw = document.getElementById('adminPassword').value;
+    var btn = document.getElementById('loginBtn');
+    btn.disabled = !(acc && pw);
+  };
+
+  window.handleLogin = function() {
+    var acc = document.getElementById('adminAccount').value.trim();
+    var pw = document.getElementById('adminPassword').value;
+    var err = document.getElementById('loginError');
+    if (acc === 'admin@zhiwen.com' && pw === '123456') {
+      err.style.display = 'none';
+      document.getElementById('loginPage').style.display = 'none';
+      var layout = document.getElementById('appLayout');
+      layout.style.display = 'grid';
+      App.navigate('dashboard');
+      // 初始化第一个 nav-item 为 active
+      document.querySelector('.nav-item[data-page="dashboard"]').classList.add('active');
+    } else {
+      err.style.display = 'block';
+      err.style.animation = 'none';
+      err.offsetHeight;
+      err.style.animation = 'shakeX 0.4s ease';
+    }
+  };
+
+  // ===== Toast =====
+  
+    // ===== 趋势图数据 =====
+    App._chartData = {
+      newUsers: [3150,3380,2980,3620,3400,3850,4100,3480,3720,3950,3120,4200,4350,4680,3880,3620,3450,3320,2980,4450,4080,3580,3820,3250,2880,3520,4320,3950,5180,5880],
+      deviceAct: [2150,2320,2050,2580,2450,2720,2880,2420,2600,2780,2250,2950,3100,3350,2750,2580,2480,2380,2150,3180,2980,2580,2750,2380,2120,2550,3150,2920,3780,4320]
+    };
+    // ===== 趋势图 tooltip =====
+    App.showChartTip = function(e, dayIdx) {
+      e.stopPropagation();
+      var tip = document.getElementById('chart-tip');
+      var d = App._chartData;
+      var dateStr = '6月' + (dayIdx+1) + '日（' + ['周一','周二','周三','周四','周五','周六','周日','周一','周二','周三','周四','周五','周六','周日','周一','周二','周三','周四','周五','周六','周日','周一','周二','周三','周四','周五','周六','周日','周一','周二'][dayIdx] + '）';
+      document.getElementById('tip-date').textContent = dateStr;
+      document.getElementById('tip-new').textContent = d.newUsers[dayIdx].toLocaleString();
+      document.getElementById('tip-device').textContent = d.deviceAct[dayIdx].toLocaleString();
+      var svg = e.target.closest('svg');
+      var svgRect = svg.getBoundingClientRect();
+      var container = e.target.closest('.chart-area');
+      var containerRect = container.getBoundingClientRect();
+      var cx = parseFloat(e.target.getAttribute('cx'));
+      var cy = parseFloat(e.target.getAttribute('cy'));
+      var viewBoxW = 840, viewBoxH = 250;
+      var scaleX = svgRect.width / viewBoxW;
+      var scaleY = svgRect.height / viewBoxH;
+      // tooltip 定位：svg左上角相对于容器的偏移 + 数据点在svg内的位置
+      var left = (svgRect.left - containerRect.left) + cx * scaleX;
+      var top = (svgRect.top - containerRect.top) + cy * scaleY - 10;
+      tip.style.left = left + 'px';
+      tip.style.top = top + 'px';
+      tip.style.display = 'block';
+      clearTimeout(App._tipTimer);
+      App._tipTimer = setTimeout(function(){ tip.style.display = 'none'; }, 4000);
+    };
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#chart-tip') && !e.target.closest('#page-dashboard svg circle')) {
+        document.getElementById('chart-tip').style.display = 'none';
+      }
+    });
+
+      App.showToast = function(msg, type) {
+    type = type || 'info';
+    var container = document.getElementById('toastContainer');
+    var toast = document.createElement('div');
+    toast.className = 'toast ' + type;
+
+    var icons = {success:'check-circle',error:'alert',warning:'alert',info:'info'};
+    var iconName = icons[type] || 'info';
+    toast.innerHTML = '<svg class="icon icon-lg" style="flex-shrink:0"><use href="#icon-' + iconName + '"/></svg>' + msg;
+    container.appendChild(toast);
+
+    setTimeout(function(){
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(20px)';
+      toast.style.transition = 'all 0.2s ease';
+      setTimeout(function(){ toast.remove(); }, 250);
+    }, 2500);
+  };
+
+  // ===== 全局键盘 =====
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      // 关闭所有弹窗
+      document.querySelectorAll('.modal-overlay.show').forEach(function(m){
+        App.closeModal(m.id);
+      });
+      // 关闭抽屉
+      if (document.getElementById('userDrawer').classList.contains('open')) {
+        App.closeDrawer();
+      }
+    }
+  });
+
+  // ===== 弹窗点击外部关闭 =====
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('modal-overlay') && e.target.classList.contains('show')) {
+      App.closeModal(e.target.id);
+    }
+  });
+
+  // ===== Shake 动画 =====
+  var shakeStyle = document.createElement('style');
+  shakeStyle.textContent = '@keyframes shakeX{0%,100%{transform:translateX(0)}10%,50%,90%{transform:translateX(-6px)}30%,70%{transform:translateX(6px)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}';
+  document.head.appendChild(shakeStyle);
+
+  checkLoginBtn();
+  console.log('指闻 · 运营管理后台 V2 已就绪');
+  console.log('登录帐号: admin@zhiwen.com / 123456');
+})();
+</script>
+</body>
+</html>
