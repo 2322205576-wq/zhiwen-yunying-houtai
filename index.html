@@ -1216,7 +1216,7 @@ svg.icon-2xl{width:2em;height:2em}
 
   <!-- 管理员列表 -->
   <div class="card" id="sys-admins">
-    <div class="card-header"><span style="font-size:14px;font-weight:600">管理员列表</span><button class="btn btn-primary btn-sm" onclick="App.showModal('adminModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建管理员</button></div>
+    <div class="card-header"><span style="font-size:14px;font-weight:600">管理员列表</span><div style="display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--text3);background:var(--bg);padding:3px 10px;border-radius:10px">🔒 仅超级管理员可操作</span><button class="btn btn-primary btn-sm" onclick="App.createAdmin()"><svg class="icon"><use href="#icon-plus"/></svg>新建管理员</button></div></div>
     <div class="card-body no-padding">
       <div class="table-wrap">
 <table class="data-table">
@@ -1234,30 +1234,6 @@ svg.icon-2xl{width:2em;height:2em}
     </div>
   </div>
 
-  <!-- 角色管理 -->
-  <div class="card" id="sys-roles" style="margin-top:16px">
-    <div class="card-header">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:14px;font-weight:600">角色管理</span>
-        <span style="font-size:11px;color:var(--text3);background:var(--bg);padding:3px 10px;border-radius:10px">🔒 仅超级管理员可操作</span>
-      </div>
-      <button class="btn btn-primary btn-sm" onclick="App.showModal('roleModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建角色</button>
-    </div>
-    <div class="card-body no-padding">
-      <div class="table-wrap">
-<table class="data-table">
-        <thead><tr><th>角色名称</th><th>描述</th><th>成员数</th><th>创建时间</th><th>操作</th></tr></thead>
-        <tbody id="roleTableBody">
-          <tr><td style="font-weight:600"><span class="badge" style="background:#FFF7ED;color:#C2410C;font-weight:700">超级管理员</span></td><td style="color:var(--text2)">拥有系统全部权限，可管理所有角色和权限</td><td>1</td><td>2026-01-01</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'超级管理员')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--text3);cursor:not-allowed" title="超级管理员不可删除"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
-          <tr><td style="font-weight:600"><span class="badge info">运营管理</span></td><td style="color:var(--text2)">管理用户、内容、OTA、查看数据看板</td><td>1</td><td>2026-03-15</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'运营管理')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
-          <tr><td style="font-weight:600"><span class="badge warning">开发工程师</span></td><td style="color:var(--text2)">管理OTA版本发布、查看数据和用户反馈</td><td>2</td><td>2026-03-15</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'开发工程师')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
-          <tr><td style="font-weight:600"><span class="badge success">客服专员</span></td><td style="color:var(--text2)">处理用户反馈和申诉，查看用户信息</td><td>1</td><td>2026-04-01</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'客服专员')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
-          <tr><td style="font-weight:600"><span class="badge purple">数据分析</span></td><td style="color:var(--text2)">查看数据看板，导出数据报表</td><td>1</td><td>2026-05-20</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'数据分析')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
-        </tbody>
-      </table>
-              </div>
-    </div>
-  </div>
 
 
 </div>
@@ -1458,7 +1434,7 @@ svg.icon-2xl{width:2em;height:2em}
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">角色</label>
-      <select style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;background:var(--card)"><option>超级管理员</option><option>运营管理</option><option>客服专员</option><option>开发工程师</option><option>数据分析</option><option>只读观察员</option></select>
+<input type="text" placeholder="请输入角色名称，如：运营管理、客服专员" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">手机号</label>
@@ -1652,6 +1628,11 @@ svg.icon-2xl{width:2em;height:2em}
         btn.style.opacity = '0.6';
         App.showToast('设备绑定已解除', 'success');
       }, 800);
+    },
+
+    // 新建管理员（仅超级管理员）
+    createAdmin() {
+      App.showModal('adminModal');
     },
 
     // 退出登录
