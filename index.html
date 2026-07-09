@@ -1216,24 +1216,50 @@ svg.icon-2xl{width:2em;height:2em}
 
   <!-- 管理员列表 -->
   <div class="card" id="sys-admins">
-    <div class="card-header"><span></span><button class="btn btn-primary btn-sm" onclick="App.showModal('adminModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建管理员</button></div>
+    <div class="card-header"><span style="font-size:14px;font-weight:600">管理员列表</span><button class="btn btn-primary btn-sm" onclick="App.showModal('adminModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建管理员</button></div>
     <div class="card-body no-padding">
       <div class="table-wrap">
 <table class="data-table">
         <thead><tr><th>姓名</th><th>角色</th><th>手机号</th><th>邮箱</th><th>最后登录</th><th>状态</th><th>操作</th></tr></thead>
         <tbody>
-          <tr><td style="font-weight:600">张运营</td><td><span class="badge info">运营管理</span></td><td>138****9999</td><td>zhangyun@zhiwen.com</td><td>刚刚</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
-          <tr><td style="font-weight:600">李开发</td><td><span class="badge warning">开发工程师</span></td><td>139****8888</td><td>likaifa@zhiwen.com</td><td>1小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
-          <tr><td style="font-weight:600">王客服</td><td><span class="badge success">客服专员</span></td><td>137****7777</td><td>wangke@zhiwen.com</td><td>3小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
-          <tr><td style="font-weight:600">赵分析</td><td><span class="badge purple">数据分析</span></td><td>136****6666</td><td>zhaofen@zhiwen.com</td><td>1天前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
-          <tr><td style="font-weight:600">孙技术</td><td><span class="badge warning">开发工程师</span></td><td>135****5555</td><td>sunjishu@zhiwen.com</td><td>5分钟前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr style="background:#FFF7ED"><td style="font-weight:600">👑 陈超管</td><td><span class="badge" style="background:#FFF7ED;color:#C2410C;font-weight:700">超级管理员</span></td><td>130****0000</td><td>chenchao@zhiwen.com</td><td>刚刚</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="App.editAdmin(this)" title="仅超级管理员可编辑"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">张运营</td><td><span class="badge info">运营管理</span></td><td>138****9999</td><td>zhangyun@zhiwen.com</td><td>刚刚</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="App.editAdmin(this)"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">李开发</td><td><span class="badge warning">开发工程师</span></td><td>139****8888</td><td>likaifa@zhiwen.com</td><td>1小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="App.editAdmin(this)"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">王客服</td><td><span class="badge success">客服专员</span></td><td>137****7777</td><td>wangke@zhiwen.com</td><td>3小时前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="App.editAdmin(this)"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">赵分析</td><td><span class="badge purple">数据分析</span></td><td>136****6666</td><td>zhaofen@zhiwen.com</td><td>1天前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="App.editAdmin(this)"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
+          <tr><td style="font-weight:600">孙技术</td><td><span class="badge warning">开发工程师</span></td><td>135****5555</td><td>sunjishu@zhiwen.com</td><td>5分钟前</td><td><span class="badge success">正常</span></td><td><button class="btn btn-ghost btn-xs" onclick="App.editAdmin(this)"><svg class="icon"><use href="#icon-edit"/></svg></button></td></tr>
         </tbody>
       </table>
               </div>
     </div>
   </div>
 
-  
+  <!-- 角色管理 -->
+  <div class="card" id="sys-roles" style="margin-top:16px">
+    <div class="card-header">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:14px;font-weight:600">角色管理</span>
+        <span style="font-size:11px;color:var(--text3);background:var(--bg);padding:3px 10px;border-radius:10px">🔒 仅超级管理员可操作</span>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="App.showModal('roleModal')"><svg class="icon"><use href="#icon-plus"/></svg>新建角色</button>
+    </div>
+    <div class="card-body no-padding">
+      <div class="table-wrap">
+<table class="data-table">
+        <thead><tr><th>角色名称</th><th>描述</th><th>成员数</th><th>创建时间</th><th>操作</th></tr></thead>
+        <tbody id="roleTableBody">
+          <tr><td style="font-weight:600"><span class="badge" style="background:#FFF7ED;color:#C2410C;font-weight:700">超级管理员</span></td><td style="color:var(--text2)">拥有系统全部权限，可管理所有角色和权限</td><td>1</td><td>2026-01-01</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'超级管理员')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--text3);cursor:not-allowed" title="超级管理员不可删除"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
+          <tr><td style="font-weight:600"><span class="badge info">运营管理</span></td><td style="color:var(--text2)">管理用户、内容、OTA、查看数据看板</td><td>1</td><td>2026-03-15</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'运营管理')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
+          <tr><td style="font-weight:600"><span class="badge warning">开发工程师</span></td><td style="color:var(--text2)">管理OTA版本发布、查看数据和用户反馈</td><td>2</td><td>2026-03-15</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'开发工程师')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
+          <tr><td style="font-weight:600"><span class="badge success">客服专员</span></td><td style="color:var(--text2)">处理用户反馈和申诉，查看用户信息</td><td>1</td><td>2026-04-01</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'客服专员')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
+          <tr><td style="font-weight:600"><span class="badge purple">数据分析</span></td><td style="color:var(--text2)">查看数据看板，导出数据报表</td><td>1</td><td>2026-05-20</td><td><button class="btn btn-ghost btn-xs" onclick="App.editRole(this,'数据分析')"><svg class="icon"><use href="#icon-edit"/></svg>权限</button><button class="btn btn-ghost btn-xs" style="color:var(--danger)" onclick="App.deleteRole(this)"><svg class="icon"><use href="#icon-trash"/></svg></button></td></tr>
+        </tbody>
+      </table>
+              </div>
+    </div>
+  </div>
+
+
 </div>
 <!-- end main-content + app-layout -->
 
@@ -1432,7 +1458,7 @@ svg.icon-2xl{width:2em;height:2em}
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">角色</label>
-      <select style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;background:var(--card)"><option>运营管理</option><option>客服专员</option><option>开发工程师</option><option>数据分析</option><option>只读观察员</option></select>
+      <select style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px;background:var(--card)"><option>超级管理员</option><option>运营管理</option><option>客服专员</option><option>开发工程师</option><option>数据分析</option><option>只读观察员</option></select>
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">手机号</label>
@@ -1444,6 +1470,38 @@ svg.icon-2xl{width:2em;height:2em}
     </div>
   </div>
   <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('adminModal')">取消</button><button class="btn btn-primary" onclick="App.closeModal('adminModal')">创建</button></div>
+</div></div>
+
+<!-- 角色管理弹窗 -->
+<div class="modal-overlay" id="roleModal"><div class="modal" style="max-width:600px">
+  <div class="modal-header"><h3 id="roleModalTitle">新建角色</h3><button class="modal-close" onclick="App.closeModal('roleModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-body">
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">角色名称</label>
+      <input type="text" id="roleName" placeholder="请输入角色名称" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">角色描述</label>
+      <input type="text" id="roleDesc" placeholder="请输入角色描述" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:10px">模块权限</label>
+      <div class="perm-grid">
+        <table>
+          <thead><tr><th>模块</th><th style="text-align:center">查看</th><th style="text-align:center">编辑</th><th style="text-align:center">删除</th><th style="text-align:center">导出</th></tr></thead>
+          <tbody>
+            <tr><td>数据看板</td><td style="text-align:center"><input type="checkbox" checked style="accent-color:var(--primary);cursor:pointer" onchange="App.togglePermRow(this)"></td><td style="text-align:center">—</td><td style="text-align:center">—</td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td></tr>
+            <tr><td>用户管理</td><td style="text-align:center"><input type="checkbox" checked style="accent-color:var(--primary);cursor:pointer" onchange="App.togglePermRow(this)"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td></tr>
+            <tr><td>内容管理</td><td style="text-align:center"><input type="checkbox" checked style="accent-color:var(--primary);cursor:pointer" onchange="App.togglePermRow(this)"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center">—</td></tr>
+            <tr><td>问题反馈</td><td style="text-align:center"><input type="checkbox" checked style="accent-color:var(--primary);cursor:pointer" onchange="App.togglePermRow(this)"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center">—</td><td style="text-align:center">—</td></tr>
+            <tr><td>OTA管理</td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer" onchange="App.togglePermRow(this)"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center">—</td></tr>
+            <tr style="background:#FFF7ED"><td style="font-weight:700">系统管理</td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer" onchange="App.togglePermRow(this)"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center"><input type="checkbox" style="accent-color:var(--primary);cursor:pointer"></td><td style="text-align:center">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('roleModal')">取消</button><button class="btn btn-primary" onclick="App.saveRole()">保存</button></div>
 </div></div>
 
 
@@ -1580,6 +1638,22 @@ svg.icon-2xl{width:2em;height:2em}
       setTimeout(function(){ App.showToast('导出成功！文件已开始下载', 'success'); }, 1500);
     },
 
+    // 解除设备绑定
+    unbindDevice(btn) {
+      if (btn.disabled) return;
+      App.showToast('正在解除设备绑定...', 'info');
+      var card = btn.closest('.card');
+      btn.disabled = true;
+      btn.textContent = '解除中...';
+      setTimeout(function(){
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+        btn.textContent = '已解除';
+        btn.style.opacity = '0.6';
+        App.showToast('设备绑定已解除', 'success');
+      }, 800);
+    },
+
     // 退出登录
     logout() {
       document.getElementById('appLayout').style.display = 'none';
@@ -1587,6 +1661,81 @@ svg.icon-2xl{width:2em;height:2em}
       document.getElementById('adminPassword').value = '';
       document.getElementById('loginError').style.display = 'none';
       document.getElementById('loginBtn').disabled = true;
+    },
+
+    // 编辑管理员
+    editAdmin(btn) {
+      var row = btn.closest('tr');
+      var cells = row.querySelectorAll('td');
+      var name = cells[0].textContent.replace('👑 ','').trim();
+      var role = cells[1].textContent.trim();
+      var phone = cells[2].textContent.trim();
+      // 如果编辑的是超级管理员本人，做个确认
+      if (role === '超级管理员') {
+        App.showToast('⚠️ 正在编辑超级管理员「' + name + '」', 'warning');
+      } else {
+        App.showToast('正在编辑管理员「' + name + '」', 'info');
+      }
+    },
+
+    // 编辑角色权限
+    editRole(btn, roleName) {
+      var modalTitle = document.getElementById('roleModalTitle');
+      modalTitle.textContent = '编辑角色 · ' + roleName;
+      document.getElementById('roleName').value = roleName;
+      document.getElementById('roleDesc').value = '';
+      // 根据角色名预设描述
+      var descMap = {
+        '超级管理员': '拥有系统全部权限，可管理所有角色和权限',
+        '运营管理': '管理用户、内容、OTA、查看数据看板',
+        '开发工程师': '管理OTA版本发布、查看数据和用户反馈',
+        '客服专员': '处理用户反馈和申诉，查看用户信息',
+        '数据分析': '查看数据看板，导出数据报表'
+      };
+      document.getElementById('roleDesc').value = descMap[roleName] || '';
+      App.showModal('roleModal');
+    },
+
+    // 删除角色
+    deleteRole(btn) {
+      var row = btn.closest('tr');
+      var roleName = row.querySelector('td:first-child').textContent.trim();
+      if (roleName === '超级管理员') {
+        App.showToast('⚠️ 超级管理员角色不可删除', 'warning');
+        return;
+      }
+      if (confirm('确定要删除角色「' + roleName + '」吗？删除后该角色下的管理员将失去权限。')) {
+        row.style.opacity = '0.4';
+        row.style.transition = 'opacity 0.3s';
+        setTimeout(function(){ row.remove(); }, 300);
+        App.showToast('角色「' + roleName + '」已删除', 'success');
+      }
+    },
+
+    // 保存角色
+    saveRole() {
+      var name = document.getElementById('roleName').value.trim();
+      if (!name) {
+        App.showToast('请输入角色名称', 'error');
+        return;
+      }
+      App.closeModal('roleModal');
+      App.showToast('角色「' + name + '」已保存', 'success');
+    },
+
+    // 权限行切换（联动禁用）
+    togglePermRow(cb) {
+      var row = cb.closest('tr');
+      var checkboxes = row.querySelectorAll('input[type="checkbox"]');
+      if (!cb.checked) {
+        // 取消查看权限时，联动取消其他权限
+        var isViewCol = Array.from(row.querySelectorAll('td')).indexOf(cb.closest('td')) === 1;
+        if (isViewCol) {
+          for (var i = 1; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+          }
+        }
+      }
     },
 
   };
