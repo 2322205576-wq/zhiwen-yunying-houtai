@@ -751,11 +751,10 @@ svg.icon-2xl{width:2em;height:2em}
     <div class="login-logo">
       <div class="logo-ring"><svg class="icon icon-xl" style="width:26px;height:26px"><use href="#icon-ring"/></svg></div>
       <h1>指闻 · 运营管理后台</h1>
-      <p>ZHIWEN Admin Console</p>
     </div>
     <div class="form-group">
       <label>帐号</label>
-      <input id="adminAccount" value="admin@zhiwen.com" oninput="checkLoginBtn()" onkeydown="if(event.key==='Enter')handleLogin()" placeholder="请输入管理员帐号" autocomplete="off">
+      <input id="adminAccount" value="admin" oninput="checkLoginBtn()" onkeydown="if(event.key==='Enter')handleLogin()" placeholder="请输入管理员帐号" autocomplete="off">
     </div>
     <div class="form-group">
       <label>密码</label>
@@ -946,7 +945,6 @@ svg.icon-2xl{width:2em;height:2em}
       <div style="display:flex;gap:20px;font-size:12px">
         <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--info)"></span> 新增用户</span>
         <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:var(--success)"></span> 设备激活</span>
-        <span style="font-size:11px;color:var(--text3)">💡 点击数据点查看详情</span>
       </div>
     </div>
     <div class="card-body chart-area" style="padding-bottom:8px;position:relative">
@@ -1605,7 +1603,7 @@ svg.icon-2xl{width:2em;height:2em}
     var acc = document.getElementById('adminAccount').value.trim();
     var pw = document.getElementById('adminPassword').value;
     var err = document.getElementById('loginError');
-    if (acc === 'admin@zhiwen.com' && pw === '123456') {
+    if (acc === 'admin' && pw === '123456') {
       err.style.display = 'none';
       document.getElementById('loginPage').style.display = 'none';
       var layout = document.getElementById('appLayout');
@@ -1708,7 +1706,7 @@ svg.icon-2xl{width:2em;height:2em}
 
   checkLoginBtn();
   console.log('指闻 · 运营管理后台 V2 已就绪');
-  console.log('登录帐号: admin@zhiwen.com / 123456');
+  console.log('登录帐号: admin / 123456');
 })();
 </script>
 </body>
