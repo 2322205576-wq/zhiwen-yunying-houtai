@@ -1278,6 +1278,9 @@ svg.icon-2xl{width:2em;height:2em}
         </div>
         <div style="display:flex;flex-direction:column;gap:8px">
           <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">设备名称</span><span style="font-weight:600">我的戒指</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">戒指材质</span><span style="font-weight:600">钛合金</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">戒指尺寸</span><span style="font-weight:600">18#（内径18.3mm）</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">戒指颜色</span><span style="font-weight:600">曜石黑</span></div>
           <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">固件版本</span><span style="font-weight:600">v2.4.1</span></div>
           <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">硬件版本</span><span style="font-weight:600">HW-R3-V2</span></div>
           <div style="display:flex;justify-content:space-between;padding:8px 10px;background:#F8FAFC;border-radius:6px;font-size:13px"><span style="color:var(--text2)">序列号</span><span style="font-weight:600;font-family:monospace">SN2026A00001</span></div>
@@ -1426,29 +1429,54 @@ svg.icon-2xl{width:2em;height:2em}
 
 <!-- 管理员弹窗 -->
 <div class="modal-overlay" id="adminModal"><div class="modal">
-  <div class="modal-header"><h3>新建管理员</h3><button class="modal-close" onclick="App.closeModal('adminModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
+  <div class="modal-header"><h3 id="adminModalTitle">新建管理员</h3><button class="modal-close" onclick="App.closeModal('adminModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
   <div class="modal-body">
+    <input type="hidden" id="adminEditIndex" value="">
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">姓名</label>
-      <input type="text" placeholder="请输入姓名" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+      <input type="text" id="adminName" placeholder="请输入姓名" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">角色</label>
-<input type="text" placeholder="请输入角色名称，如：运营管理、客服专员" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+      <input type="text" id="adminRole" placeholder="请输入角色名称，如：运营管理、客服专员" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">手机号</label>
-      <input type="text" placeholder="请输入手机号" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+      <input type="text" id="adminPhone" placeholder="请输入手机号" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
     </div>
     <div class="form-group" style="margin-bottom:16px">
       <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:6px">邮箱</label>
-      <input type="email" placeholder="请输入邮箱" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+      <input type="email" id="adminEmail" placeholder="请输入邮箱" style="width:100%;height:40px;padding:0 12px;border:1.5px solid var(--border);border-radius:var(--radius);font-size:14px">
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label style="display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:8px">权限开放</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px" id="adminPermGroup">
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:13px;transition:all 0.15s;background:var(--card);user-select:none" data-perm="数据看板" onmouseenter="this.style.borderColor='var(--primary)'" onmouseleave="if(!this.classList.contains('perm-on'))this.style.borderColor='var(--border)'">
+          <input type="checkbox" value="数据看板" style="accent-color:var(--primary);cursor:pointer" onchange="var l=this.closest('label');if(this.checked){l.classList.add('perm-on');l.style.background='var(--primary-50)';l.style.borderColor='var(--primary)';l.style.color='var(--primary)'}else{l.classList.remove('perm-on');l.style.background='var(--card)';l.style.borderColor='var(--border)';l.style.color=''}">
+          <svg class="icon" style="width:14px;height:14px"><use href="#icon-dashboard"/></svg> 数据看板
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:13px;transition:all 0.15s;background:var(--card);user-select:none" data-perm="用户管理" onmouseenter="this.style.borderColor='var(--primary)'" onmouseleave="if(!this.classList.contains('perm-on'))this.style.borderColor='var(--border)'">
+          <input type="checkbox" value="用户管理" style="accent-color:var(--primary);cursor:pointer" onchange="var l=this.closest('label');if(this.checked){l.classList.add('perm-on');l.style.background='var(--primary-50)';l.style.borderColor='var(--primary)';l.style.color='var(--primary)'}else{l.classList.remove('perm-on');l.style.background='var(--card)';l.style.borderColor='var(--border)';l.style.color=''}">
+          <svg class="icon" style="width:14px;height:14px"><use href="#icon-users"/></svg> 用户管理
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:13px;transition:all 0.15s;background:var(--card);user-select:none" data-perm="内容管理" onmouseenter="this.style.borderColor='var(--primary)'" onmouseleave="if(!this.classList.contains('perm-on'))this.style.borderColor='var(--border)'">
+          <input type="checkbox" value="内容管理" style="accent-color:var(--primary);cursor:pointer" onchange="var l=this.closest('label');if(this.checked){l.classList.add('perm-on');l.style.background='var(--primary-50)';l.style.borderColor='var(--primary)';l.style.color='var(--primary)'}else{l.classList.remove('perm-on');l.style.background='var(--card)';l.style.borderColor='var(--border)';l.style.color=''}">
+          <svg class="icon" style="width:14px;height:14px"><use href="#icon-content"/></svg> 内容管理
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:13px;transition:all 0.15s;background:var(--card);user-select:none" data-perm="问题反馈" onmouseenter="this.style.borderColor='var(--primary)'" onmouseleave="if(!this.classList.contains('perm-on'))this.style.borderColor='var(--border)'">
+          <input type="checkbox" value="问题反馈" style="accent-color:var(--primary);cursor:pointer" onchange="var l=this.closest('label');if(this.checked){l.classList.add('perm-on');l.style.background='var(--primary-50)';l.style.borderColor='var(--primary)';l.style.color='var(--primary)'}else{l.classList.remove('perm-on');l.style.background='var(--card)';l.style.borderColor='var(--border)';l.style.color=''}">
+          <svg class="icon" style="width:14px;height:14px"><use href="#icon-ticket"/></svg> 问题反馈
+        </label>
+        <label style="display:flex;align-items:center;gap:6px;padding:8px 14px;border:1.5px solid var(--border);border-radius:var(--radius);cursor:pointer;font-size:13px;transition:all 0.15s;background:var(--card);user-select:none" data-perm="OTA管理" onmouseenter="this.style.borderColor='var(--primary)'" onmouseleave="if(!this.classList.contains('perm-on'))this.style.borderColor='var(--border)'">
+          <input type="checkbox" value="OTA管理" style="accent-color:var(--primary);cursor:pointer" onchange="var l=this.closest('label');if(this.checked){l.classList.add('perm-on');l.style.background='var(--primary-50)';l.style.borderColor='var(--primary)';l.style.color='var(--primary)'}else{l.classList.remove('perm-on');l.style.background='var(--card)';l.style.borderColor='var(--border)';l.style.color=''}">
+          <svg class="icon" style="width:14px;height:14px"><use href="#icon-version"/></svg> OTA管理
+        </label>
+      </div>
     </div>
   </div>
-  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('adminModal')">取消</button><button class="btn btn-primary" onclick="App.closeModal('adminModal')">创建</button></div>
+  <div class="modal-footer"><button class="btn btn-outline" onclick="App.closeModal('adminModal')">取消</button><button class="btn btn-primary" onclick="App.saveAdmin()">保存</button></div>
 </div></div>
 
-<!-- 角色管理弹窗 -->
 <div class="modal-overlay" id="roleModal"><div class="modal" style="max-width:600px">
   <div class="modal-header"><h3 id="roleModalTitle">新建角色</h3><button class="modal-close" onclick="App.closeModal('roleModal')"><svg class="icon icon-lg"><use href="#icon-x"/></svg></button></div>
   <div class="modal-body">
@@ -1632,7 +1660,45 @@ svg.icon-2xl{width:2em;height:2em}
 
     // 新建管理员（仅超级管理员）
     createAdmin() {
+      document.getElementById('adminModalTitle').textContent = '新建管理员';
+      document.getElementById('adminEditIndex').value = '';
+      document.getElementById('adminName').value = '';
+      document.getElementById('adminRole').value = '';
+      document.getElementById('adminPhone').value = '';
+      document.getElementById('adminEmail').value = '';
+      // 清空权限勾选
+      var checks = document.querySelectorAll('#adminPermGroup input[type=checkbox]');
+      checks.forEach(function(cb){
+        cb.checked = false;
+        var l = cb.closest('label');
+        l.classList.remove('perm-on');
+        l.style.background = 'var(--card)';
+        l.style.borderColor = 'var(--border)';
+        l.style.color = '';
+      });
       App.showModal('adminModal');
+    },
+
+    // 保存管理员（新建/编辑）
+    saveAdmin() {
+      var name = document.getElementById('adminName').value.trim();
+      var role = document.getElementById('adminRole').value.trim();
+      var phone = document.getElementById('adminPhone').value.trim();
+      var email = document.getElementById('adminEmail').value.trim();
+      if (!name) { App.showToast('请输入姓名', 'warning'); return; }
+      if (!role) { App.showToast('请输入角色', 'warning'); return; }
+      if (!phone) { App.showToast('请输入手机号', 'warning'); return; }
+      if (!email) { App.showToast('请输入邮箱', 'warning'); return; }
+      // 收集选中权限
+      var perms = [];
+      document.querySelectorAll('#adminPermGroup input[type=checkbox]:checked').forEach(function(cb){ perms.push(cb.value); });
+      var isEdit = document.getElementById('adminModalTitle').textContent.indexOf('编辑') !== -1;
+      if (isEdit) {
+        App.showToast('管理员「' + name + '」信息已更新（' + perms.length + '项权限）', 'success');
+      } else {
+        App.showToast('管理员「' + name + '」已创建（' + perms.length + '项权限）', 'success');
+      }
+      App.closeModal('adminModal');
     },
 
     // 退出登录
@@ -1651,12 +1717,41 @@ svg.icon-2xl{width:2em;height:2em}
       var name = cells[0].textContent.replace('👑 ','').trim();
       var role = cells[1].textContent.trim();
       var phone = cells[2].textContent.trim();
-      // 如果编辑的是超级管理员本人，做个确认
-      if (role === '超级管理员') {
-        App.showToast('⚠️ 正在编辑超级管理员「' + name + '」', 'warning');
-      } else {
-        App.showToast('正在编辑管理员「' + name + '」', 'info');
-      }
+      var email = cells[3].textContent.trim();
+      // 设置弹窗标题和模式
+      document.getElementById('adminModalTitle').textContent = '编辑管理员';
+      document.getElementById('adminEditIndex').value = row.rowIndex;
+      // 回填数据
+      document.getElementById('adminName').value = name;
+      document.getElementById('adminRole').value = role;
+      document.getElementById('adminPhone').value = phone;
+      document.getElementById('adminEmail').value = email;
+      // 根据角色预设权限（超级管理员默认全选）
+      var permChecks = document.querySelectorAll('#adminPermGroup input[type=checkbox]');
+      var presetPerms = role === '超级管理员' ? ['数据看板','用户管理','内容管理','问题反馈','OTA管理']
+        : role === '运营管理' ? ['数据看板','用户管理','内容管理','OTA管理']
+        : role === '开发工程师' ? ['OTA管理','问题反馈']
+        : role === '客服专员' ? ['用户管理','问题反馈']
+        : role === '数据分析' ? ['数据看板']
+        : [];
+      permChecks.forEach(function(cb){
+        var isChecked = presetPerms.indexOf(cb.value) !== -1;
+        cb.checked = isChecked;
+        var l = cb.closest('label');
+        if (isChecked) {
+          l.classList.add('perm-on');
+          l.style.background = 'var(--primary-50)';
+          l.style.borderColor = 'var(--primary)';
+          l.style.color = 'var(--primary)';
+        } else {
+          l.classList.remove('perm-on');
+          l.style.background = 'var(--card)';
+          l.style.borderColor = 'var(--border)';
+          l.style.color = '';
+        }
+      });
+      App.showToast('正在编辑管理员「' + name + '」', 'info');
+      App.showModal('adminModal');
     },
 
     // 编辑角色权限
